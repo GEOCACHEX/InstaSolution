@@ -3,14 +3,29 @@
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <!-- we import arjs version without NFT but with marker + location based support -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  
+  <head>
+	<title>GEOCACHEX® InstaSolution™</title>
+  </head>
   <body style="margin : 0px; overflow: hidden;">
-    <a-scene embedded arjs="detectionMode: mono_and_matrix; matrixCodeType: 4x4_BCH_13_9_3;">
+    <a-scene 
+	  loading-screen="dotsColor: green; backgroundColor: black" 
+	  vr-mode-ui="enabled: false" embedded light="defaultLightsEnabled: false" 
+	  arjs="detectionMode: mono_and_matrix; matrixCodeType: 4x4_BCH_13_9_3;"
+	>
+	
+	  <a-entity light="type: ambient; color: #CCC; intensity: 4"></a-entity>
+	  <a-entity light="type: directional; castShadow:true; color: #CFC; intensity: 4" position="10 10 10"></a-entity>
+		
       <a-marker type="barcode" value="69">
         <a-entity
-          position="0 0 0"
-          scale="0.05 0.05 0.05"
-          gltf-model="https://arjs-cors-proxy.herokuapp.com/https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/scene.gltf"
+		  shadow="cast: true"
+          position="0 1.01 0"
+          scale="4 4 4"
+          gltf-model="zuk/scene.gltf"
         ></a-entity>
+		<a-box color="black" depth="6" height="1" width="3" shadow="receive: true"></a-box>
+		
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
