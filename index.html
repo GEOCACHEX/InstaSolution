@@ -1,29 +1,38 @@
 <!DOCTYPE html>
 <html>
   <script src="aframe_1_2_0.min.js"></script>
-  <script src="aframe-ar_3_3_3.js"></script>
+  <script src="aframe-ar_3_3_3.min.js"></script>
   
   <head>
 	<title>GEOCACHEX® InstaSolution™</title>
   </head>
   <body style="margin : 0px; overflow: hidden;">
     <a-scene 
-	  loading-screen="dotsColor: green; backgroundColor: black" 
-	  vr-mode-ui="enabled: false" embedded light="defaultLightsEnabled: false" 
+	  shadow="type: pcf"
+	  renderer="logarithmicDepthBuffer: true;"
+	  loading-screen="dotsColor: green; backgroundColor: black;" 
+	  vr-mode-ui="enabled: false" 
+	  embedded 
+	  light="defaultLightsEnabled: false" 
 	  arjs="detectionMode: mono_and_matrix; matrixCodeType: 4x4_BCH_13_9_3;"
 	>
+	  <a-assets>
+        <img id="car-shadow" src="zuk/textures/shadow.png">
+		<img id="car-name" src="zuk/textures/name.png">
+      </a-assets>
 	
 	  <a-entity light="type: ambient; color: #CCC; intensity: 4"></a-entity>
-	  <a-entity light="type: directional; castShadow:true; color: #CFC; intensity: 4" position="10 10 10"></a-entity>
+	  <a-entity light="type: directional; color: #CFC; intensity: 4" position="-1.5 1.0 1.0"></a-entity>
 		
       <a-marker type="barcode" value="69">
-        <a-entity
-		  shadow="cast: true"
-          position="0 1.01 0"
+		<a-entity
+          position="0 0.75 0"
           scale="4 4 4"
           gltf-model="zuk/scene.gltf"
         ></a-entity>
-		<a-box color="black" depth="6" height="1" width="3" shadow="receive: true"></a-box>
+		<a-image src="#car-shadow" rotation="90 0 0" position="0 0.126 0" scale="3.5 6.5 3"></a-image>
+		<a-image src="#car-name" position="0 0 3.31" height="0.24" width="2.7"></a-image>
+		<a-box color="#050505" depth="6.6" height="0.25" width="3"></a-box>
 		
       </a-marker>
       <a-entity camera></a-entity>
