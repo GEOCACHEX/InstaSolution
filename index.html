@@ -9,12 +9,13 @@
 <!---->
 <!---->
 <!---->
-<!DOCTYPE html>
+
 <html>
-
-
 <head>
+	<title>GEOCACHEX® InstaSolution™</title>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no," />
+
 	<script>
 		if ('serviceWorker' in navigator) {
 			window.addEventListener('load', function() {
@@ -25,41 +26,38 @@
 				});
 			});
 		}
-		document.addEventListener('DOMContentLoaded', function() {
-			document.querySelector('a-scene').addEventListener('loaded', function (e) {
-				var interval = setInterval(checkVideo, 100);
-				function checkVideo() {
-					if(document.querySelector('#arjs-video')) {
-						clearInterval(interval);
-						document.querySelector('.loading-screen').style.display = 'none';
-					}
-				}
-			});
-		});
+		window.addEventListener('message' ,function(e) {
+			if(e.data === 'apploaded') {
+				document.querySelector('#loading-screen').style.display = 'none';
+			}
+		},false);
 	</script>
 
-	<link rel="preload" href="zuk/scene.bin" as="fetch">
-	<link rel="preload" href="zuk/scene.gltf" as="fetch">
-	<link rel="preload" as="image" href="zuk/textures/material_baseColor.jpeg">
-	<link rel="preload" as="image" href="zuk/textures/material_emissive.jpeg">
-	<link rel="preload" as="image" href="zuk/textures/material_metallicRoughness.jpg">
-	<link rel="preload" as="image" href="zuk/textures/material_normal.jpeg">
-	<link rel="preload" as="image" href="zuk/textures/shadow.png">
-	<link rel="preload" as="image" href="zuk/textures/name.png">
-
-
-	<title>GEOCACHEX® InstaSolution™</title>
 	<style>
 		body {
 			margin : 0;
 			overflow: hidden;
+		}
+		#app {
+			position:fixed;
+			top:0;
+			left:0;
+			bottom:0;
+			right:0;
+			width:100%;
+			height:100%;
+			border:none;
+			margin:0;
+			padding:0;
+			overflow:hidden;
+			z-index: 10000;
 		}
 		.loader-text {
 			color: white;
 			filter: drop-shadow(2px 2px 2px black);
 			font-size: 18px;
 		}
-		.loading-screen {
+		#loading-screen {
 			position: fixed;
 			top: 0;
 			left: 0;
@@ -70,6 +68,7 @@
 			align-items: center;
 			justify-content: center;
 			flex-direction: column;
+			z-index: 10001;
 		}
 		.loader,
 		.loader:after {
@@ -115,59 +114,14 @@
 
 	</style>
 </head>
-<body>
-<div id="loading-screen" class="loading-screen">
+
+<body style="background-color: #126524">
+
+<div id="loading-screen">
 	<div class="loader"></div>
 	<div class="loader-text">GEOCACHEX® InstaSolution™</div>
 </div>
-
-<script src="aframe_1_2_0.min.js"></script>
-<script src="aframe-ar_3_3_3.min.js"></script>
-
-<!---->
-<!---->
-<!---->
-<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
-<!--Zagadka jest na prawdę absuralnie prosta i przeglądanie tego kodu kompletnie niszczy Ci jakąkolwiek zabawę z podejmowania tego kesza. Przeglądając jedynie kod nie otworzysz pojemnika, na prawdę musisz odpalić appke na telefonie.-->
-<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
-<!--The puzzle is really absurdly simple and browsing through this code completely destroys any fun of finding this cache. You won't open the container just by looking at the code, you really need to run this app on a phone.-->
-<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
-<!---->
-<!---->
-<!---->
-
-<a-scene
-		loading-screen="enabled: false"
-		shadow="type: pcf"
-		renderer="logarithmicDepthBuffer: true;"
-		vr-mode-ui="enabled: false"
-		embedded
-		light="defaultLightsEnabled: false"
-		arjs="detectionMode: mono_and_matrix; matrixCodeType: 4x4_BCH_13_9_3;"
->
-	<a-assets>
-		<img id="car-shadow" src="zuk/textures/shadow.png">
-		<img id="car-name" src="zuk/textures/name.png">
-		<a-asset-item id="car-model" src="zuk/scene.gltf"></a-asset-item>
-	</a-assets>
-
-	<a-entity light="type: ambient; color: #CCC; intensity: 4"></a-entity>
-	<a-entity light="type: directional; color: #CFC; intensity: 4" position="-1.5 1.0 1.0"></a-entity>
-
-
-	<a-marker type="barcode" value="69">
-		<a-entity
-				position="0 0.75 0"
-				scale="4 4 4"
-				gltf-model="#car-model"
-		></a-entity>
-		<a-image src="#car-shadow" rotation="90 0 0" position="0 0.126 0" scale="3.5 6.5 3"></a-image>
-		<a-image src="#car-name" position="0 0 3.31" height="0.24" width="2.7"></a-image>
-		<a-box color="#050505" depth="6.6" height="0.25" width="3"></a-box>
-
-	</a-marker>
-	<a-entity camera></a-entity>
-</a-scene>
+<iframe id="app" src="app.html">Error :(</iframe>
 
 </body>
 </html>
@@ -176,9 +130,9 @@
 <!---->
 <!---->
 <!--⚠️⚠️⚠️⚠️⚠️⚠️-->
-<!--Zagadka jest na prawdę absuralnie prosta i przeglądanie tego kodu kompletnie niszczy Ci jakąkolwiek zabawę z podejmowania tego kesza. Przeglądając jedynie kod nie otworzysz pojemnika, na prawdę musisz odpalić appke na telefonie.-->
+<!--Zagadka jest na prawdę absuralnie prosta i przeglądanie tego kodu kompletnie niszczy Ci jakąkolwiek zabawę/niepodziankę z podejmowania tego kesza. Przeglądając jedynie kod i tak nie otworzysz pojemnika, na prawdę musisz odpalić appke na telefonie.-->
 <!--⚠️⚠️⚠️⚠️⚠️⚠️-->
-<!--The puzzle is really absurdly simple and browsing through this code completely destroys any fun of finding this cache. You won't open the container just by looking at the code, you really need to run this app on a phone.-->
+<!--The puzzle is really absurdly simple and browsing through this code completely destroys any fun/suprise of finding this cache. You won't even be able open the container just by looking at the code, you really need to run this app on a phone.-->
 <!--⚠️⚠️⚠️⚠️⚠️⚠️-->
 <!---->
 <!---->
