@@ -6,7 +6,7 @@
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
 			document.querySelector('a-scene').addEventListener('loaded', function (e) {
-				var interval = setInterval(checkVideo, 100);
+				let interval = setInterval(checkVideo, 100);
 				function checkVideo() {
 					if(document.querySelector('#arjs-video')) {
 						clearInterval(interval);
@@ -15,11 +15,57 @@
 				}
 			});
 		});
+
+		const minX = 54.50734476593547, minY = 18.545945167398138, maxX = 54.5088025841609, maxY = 18.549525607179877;
+		setInterval(function () {
+			window.navigator.geolocation.getCurrentPosition(function (data) {
+				const x = data.coords.latitude;
+				const y = data.coords.longitude;
+				const outside = x > maxX || x < minX || y > maxY || y < minY;
+				document.querySelector('#error-layer').style.display = outside ? 'flex' : 'none';
+			})
+		}, 1000);
+
+
+
 	</script>
 	<style>
 		body {
 			margin : 0;
 			overflow: hidden;
+			font-family: Helvetica , sans-serif;
+		}
+		#logo {
+			position: fixed;
+			top: 10px;
+			left: 10px;
+			z-index: 99;
+			border-radius: 10px;
+			border: 3px solid #126524;
+			box-shadow: 0px 0px 5px 1px #1c9962;
+		}
+		#error-layer {
+			display: flex;
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			width: 100%;
+			height: 100%;
+			align-items: center;
+			justify-content: center;
+		}
+		#location-error {
+			color: #126524;
+			display: inline-block;
+			width: 80vw;
+			z-index: 100;
+			border-radius: 10px;
+			border: 3px solid #126524;
+			box-shadow: 0px 0px 5px 1px #1c9962;
+			background-color: #e4fff4;
+			padding: 10px;
 		}
 	</style>
 	<meta charset="UTF-8">
@@ -32,9 +78,20 @@
 	<link rel="preload" as="image" href="zuk/textures/material_normal.jpeg">
 	<link rel="preload" as="image" href="zuk/textures/shadow.png">
 	<link rel="preload" as="image" href="zuk/textures/name.png">
+	<link rel="preload" as="image" href="logo.jpg">
 
 </head>
 <body>
+
+<div id="error-layer">
+	<div id="location-error">
+		[PL] Udaj się na lokalizację startową skrytki i użyj tam aplikacji GEOCACHEX® InstaSolution™ na telefonie.
+		<br>
+		<br>
+		[EN] Go to the cache starting location and use the GEOCACHEX® InstaSolution™ application on your phone there.
+	</div>
+</div>
+
 <script src="aframe_1_2_0.min.js"></script>
 <script src="aframe-ar_3_3_3.min.js"></script>
 
@@ -50,6 +107,7 @@
 <!---->
 <!---->
 
+<img id="logo" src="logo.jpg">
 <a-scene
 		loading-screen="enabled: false"
 		shadow="type: pcf"
