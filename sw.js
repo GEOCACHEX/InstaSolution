@@ -2,7 +2,10 @@
 import {CacheFirst, StaleWhileRevalidate} from 'workbox-strategies';
 
 registerRoute(
-  ({request}) => request.destination === 'document',
+  ({request}) => {
+      console.log(request);
+      return request.destination === 'document';
+  },
   new CacheFirst()
 );
 

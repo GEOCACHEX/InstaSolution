@@ -20,11 +20,16 @@
 	<script>
 		if ('serviceWorker' in navigator) {
 			window.addEventListener('load', function() {
-				navigator.serviceWorker.register('sw-bundle.js').then(function(registration) {
+
+				navigator.serviceWorker.getRegistrations().then(function(registrations) {
+					for(let registration of registrations) {
+						registration.unregister()} })
+
+				/*navigator.serviceWorker.register('sw-bundle.js').then(function(registration) {
 					console.log('ServiceWorker registration successful with scope: ', registration.scope);
 				}, function(err) {
 					console.log('ServiceWorker registration failed: ', err);
-				});
+				});*/
 			});
 		}
 		window.addEventListener('message' ,function(e) {
@@ -122,7 +127,19 @@
 	<div class="loader"></div>
 	<div class="loader-text">GEOCACHEX® InstaSolution™</div>
 </div>
-<iframe id="app" src="app.html">Error :(</iframe>
+<iframe id="app" src="app.html">
+	<!---->
+	<!---->
+	<!---->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!--Zagadka jest na prawdę absuralnie prosta i przeglądanie tego kodu kompletnie niszczy Ci jakąkolwiek zabawę z podejmowania tego kesza. Przeglądając jedynie kod nie otworzysz pojemnika, na prawdę musisz odpalić appke na telefonie.-->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!--The puzzle is really absurdly simple and browsing through this code completely destroys any fun of finding this cache. You won't open the container just by looking at the code, you really need to run this app on a phone.-->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!---->
+	<!---->
+	<!---->
+</iframe>
 
 </body>
 </html>

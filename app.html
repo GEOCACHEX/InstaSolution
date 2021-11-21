@@ -4,32 +4,91 @@
 
 <head>
 	<script>
-		document.addEventListener('DOMContentLoaded', function() {
-			document.querySelector('a-scene').addEventListener('loaded', function (e) {
-				let interval = setInterval(checkVideo, 100);
-				function checkVideo() {
-					if(document.querySelector('#arjs-video')) {
-						clearInterval(interval);
-						parent.postMessage("apploaded", "*")
+
+		// Message to index to remove loader
+		document.addEventListener('DOMContentLoaded', () => {
+			let carSceneLoaded = false;
+			let pathSceneLoaded = false;
+
+			function checkIfBothScenesLoaded() {
+				if (carSceneLoaded && pathSceneLoaded) {
+					let interval = setInterval(checkVideo, 100);
+					function checkVideo() {
+						if(document.querySelector('#arjs-video')) {
+							clearInterval(interval);
+							setTimeout(() => parent.postMessage("apploaded", "*"), 500);
+						}
 					}
 				}
+			}
+
+			document.getElementById('car-scene').addEventListener('loaded', () => {
+				carSceneLoaded = true;
+				checkIfBothScenesLoaded();
+			});
+
+			document.getElementById('path-scene').addEventListener('loaded', () => {
+				pathSceneLoaded = true;
+				checkIfBothScenesLoaded();
 			});
 		});
 
+		// Location banner
 		const minX = 54.50734476593547, minY = 18.545945167398138, maxX = 54.5088025841609, maxY = 18.549525607179877;
 		setInterval(function () {
-			window.navigator.geolocation.getCurrentPosition(function (data) {
+			window.navigator.geolocation.getCurrentPosition(data => {
 				const x = data.coords.latitude;
 				const y = data.coords.longitude;
 				const outside = x > maxX || x < minX || y > maxY || y < minY;
-				document.querySelector('#error-layer').style.display = outside ? 'flex' : 'none';
+				document.getElementById('error-layer').style.display = false ? 'flex' : 'none';
 			})
 		}, 1000);
 
+		// Scene switcher based on marker
+		document.addEventListener('DOMContentLoaded', () => {
+			function switchScene(carScene) {
+				let visibleAttribute = document.createAttribute('visible');
+				visibleAttribute.value = carScene ? 'true' : 'false';
+				document.getElementById('car-scene-root').setAttributeNode(visibleAttribute);
+				visibleAttribute = document.createAttribute('visible');
+				visibleAttribute.value = carScene ? 'false' : 'true'
+				document.getElementById('path-scene-root').setAttributeNode(visibleAttribute);
+				//console.log('Scene change: ' + carScene);
+				document.getElementById('car-scene').style.display = carScene ? 'block' : 'none';
+				document.getElementById('path-scene').style.display = carScene ? 'none' : 'block';
+			}
+			switchScene(false);
+
+			let markerLostTimeout;
+			function clearLostTimeout() {
+				if(markerLostTimeout) {
+					clearTimeout(markerLostTimeout);
+					markerLostTimeout = undefined;
+				}
+			}
+
+			marker.addEventListener('markerFound', () => {
+				clearLostTimeout();
+				switchScene(true);
+			});
+			marker.addEventListener('markerLost', () => {
+				clearLostTimeout();
+				markerLostTimeout = setTimeout(() => switchScene(false), 500)
+			});
+		});
 
 
 	</script>
 	<style>
+		a-scene {
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			width: 100%;
+			height: 100%;
+		}
 		body {
 			margin : 0;
 			overflow: hidden;
@@ -70,6 +129,9 @@
 	</style>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+	<link rel="preload" as="image" href="logo.jpg">
+
 	<link rel="preload" href="zuk/scene.bin" as="fetch">
 	<link rel="preload" href="zuk/scene.gltf" as="fetch">
 	<link rel="preload" as="image" href="zuk/textures/material_baseColor.jpeg">
@@ -78,7 +140,9 @@
 	<link rel="preload" as="image" href="zuk/textures/material_normal.jpeg">
 	<link rel="preload" as="image" href="zuk/textures/shadow.png">
 	<link rel="preload" as="image" href="zuk/textures/name.png">
-	<link rel="preload" as="image" href="logo.jpg">
+
+	<link rel="preload" href="arrow/scene.bin" as="fetch">
+	<link rel="preload" href="arrow/scene.gltf" as="fetch">
 
 </head>
 <body>
@@ -108,10 +172,12 @@
 <!---->
 
 <img id="logo" src="logo.jpg">
+
 <a-scene
+		id="car-scene"
 		loading-screen="enabled: false"
 		shadow="type: pcf"
-		renderer="logarithmicDepthBuffer: true;"
+		renderer="logarithmicDepthBuffer: true;antialias: true;alpha: true"
 		vr-mode-ui="enabled: false"
 		embedded
 		light="defaultLightsEnabled: false"
@@ -123,23 +189,49 @@
 		<a-asset-item id="car-model" src="zuk/scene.gltf"></a-asset-item>
 	</a-assets>
 
-	<a-entity light="type: ambient; color: #CCC; intensity: 4"></a-entity>
-	<a-entity light="type: directional; color: #CFC; intensity: 4" position="-1.5 1.0 1.0"></a-entity>
-	<a-entity light="type: directional; color: #FCC; intensity: 4" position="1.5 1.1 -1.0"></a-entity>
+	<a-entity id="car-scene-root">
+		<a-entity light="type: ambient; color: #CCC; intensity: 4"></a-entity>
+		<a-entity light="type: directional; color: #CFC; intensity: 4" position="-1.5 1.0 1.0"></a-entity>
+		<a-entity light="type: directional; color: #FCC; intensity: 4" position="1.5 1.1 -1.0"></a-entity>
+		<a-marker id="marker" type="barcode" value="69">
+			<a-entity
+					position="0 0.75 0"
+					scale="4 4 4"
+					gltf-model="#car-model"
+			></a-entity>
+			<a-image src="#car-shadow" rotation="90 0 0" position="0 0.126 0" scale="3.5 6.5 3"></a-image>
+			<a-image src="#car-name" position="0 0 3.31" height="0.24" width="2.7"></a-image>
+			<a-box color="#050505" depth="6.6" height="0.25" width="3"></a-box>
 
+		</a-marker>
+	</a-entity>
+	<a-entity camera id="car-scene-camera"></a-entity>
 
-	<a-marker type="barcode" value="69">
-		<a-entity
-				position="0 0.75 0"
-				scale="4 4 4"
-				gltf-model="#car-model"
-		></a-entity>
-		<a-image src="#car-shadow" rotation="90 0 0" position="0 0.126 0" scale="3.5 6.5 3"></a-image>
-		<a-image src="#car-name" position="0 0 3.31" height="0.24" width="2.7"></a-image>
-		<a-box color="#050505" depth="6.6" height="0.25" width="3"></a-box>
+</a-scene>
 
-	</a-marker>
-	<a-entity camera></a-entity>
+<a-scene
+		id="path-scene"
+		loading-screen="enabled: false"
+		shadow="type: pcf"
+		renderer="logarithmicDepthBuffer: true;antialias: true"
+		vr-mode-ui="enabled: false"
+		embedded
+		light="defaultLightsEnabled: false"
+		arjs="sourceType: webcam; videoTexture: true;"
+>
+	<a-assets>
+		<a-asset-item id="arrow-model" src="arrow/scene.gltf"></a-asset-item>
+	</a-assets>
+
+	<a-entity id="path-scene-root">
+		<a-entity light="type: ambient; color: #CCC; intensity: 4"></a-entity>
+		<a-entity light="type: directional; color: #CFC; intensity: 4" position="-1.5 1.0 1.0"></a-entity>
+		<a-entity light="type: directional; color: #FCC; intensity: 4" position="1.5 1.1 -1.0"></a-entity>
+		<a-box material='color: red' scale='10 10 10'></a-box>
+		<a-box gps-entity-place='latitude: 54.5161216; longitude: 18.5401344' color="#FF0000" depth="10" height="10" width="10"></a-box>
+	</a-entity>
+
+	<a-camera gps-camera rotation-reader id="path-scene-camera"></a-camera>
 </a-scene>
 
 </body>
