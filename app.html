@@ -4,35 +4,10 @@
 <head>
 	<script>
 
-		// Measuring
-		let measures = [];
-		let heading = 0;
-
-
-		window.addEventListener("deviceorientationabsolute", (e) => heading = e.webkitCompassHeading || Math.abs(e.alpha - 360), true);
-		window.addMeasure = () => {
-			navigator.geolocation.getCurrentPosition(
-				(data) => {
-					console.log(data);
-					const lat = data.coords.latitude;
-					const lon = data.coords.longitude;
-					const alt = data.coords.altitude;
-					const acc = data.coords.accuracy;
-					const head = -(heading - 270);
-					const obj = { lat, lon, alt, head, acc };
-					measures.push(obj);
-					navigator.clipboard.writeText(JSON.stringify(measures, null, 0)).then(() => window.alert(JSON.stringify(obj, null, 0)));
-				},
-				(d) => {
-					window.alert('Failed to add');
-					console.log(d);
-				},
-				{
-					enableHighAccuracy: true,
-					maximumAge: 0
-				}
-			);
-		}
+		const minLat = 54.50734476593547;
+		const minLon = 18.545945167398138;
+		const maxLat = 54.5088025841609;
+		const maxLon = 18.549525607179877;
 
 		// Replace alerts
 		const realAlert = window.alert;
@@ -52,71 +27,14 @@
 		}
 
 		let hasLocationPermission = false;
-		let domContentLoaded = false;
-		let area = undefined;
-
-		window.fetch('elevation.json').then(response => response.json()).then(data => {
-			elevationsLoaded = true;
-			area = data;
-			tryToInit();
-		})
-
 		document.addEventListener('DOMContentLoaded', () => {
-			domContentLoaded = true;
-			tryToInit();
-		});
-
-		function tryToInit() {
-			if (domContentLoaded && area) init();
-		}
-
-		async function init() {
 			handleScenesLoading();
 			handleSceneSwitching();
 			requestGPS();
-		}
+		});
 
 		function onScenesReady() {
-			moveObjectsBasedOnElevation();
 			handleGPS();
-		}
-
-		function getVertexHeight(lat, lon) {
-			return area.elevations[lat * (area.stepsLon + 1) + lon];
-		}
-
-		function moveObjectsBasedOnElevation() {
-			const objects = document.querySelectorAll("[gps-entity-place]");
-
-			for (let object of objects) {
-				const position = object.getAttribute('position');
-				const coords = object.getAttribute('gps-entity-place');
-				const height = getHeight(coords.latitude, coords.longitude);
-				object.setAttribute('position', {
-					x: position.x,
-					y: position.y + height,
-					z: position.z
-				});
-			}
-		}
-
-		function getHeight(lat, lon) {
-			const localLat = Math.min(Math.max(lat, area.minLat), area.maxLat - area.stepLat / 1000) - area.minLat;
-			const localLon = Math.min(Math.max(lon, area.minLon), area.maxLon - area.stepLon / 1000) - area.minLon;
-			let stepLat = localLat / area.stepLat;
-			let stepLon = localLon / area.stepLon;
-			const fractionLat = stepLat % 1;
-			const fractionLon = stepLon % 1;
-			stepLat = Math.floor(stepLat);
-			stepLon = Math.floor(stepLon);
-			h00 = getVertexHeight(stepLat, stepLon);
-			h10 = getVertexHeight(stepLat + 1, stepLon);
-			h01 = getVertexHeight(stepLat, stepLon + 1);
-			h11 = getVertexHeight(stepLat + 1, stepLon + 1);
-			h0 = h00 + (h10 - h00) * fractionLat;
-			h1 = h01 + (h11 - h01) * fractionLat;
-			h = h0 + (h1 - h0) * fractionLon;
-			return h;
 		}
 
 		function handleScenesLoading() {
@@ -160,19 +78,19 @@
 			});
 
 			function onLocationChange(data) {
+
+				// Error display
 				const lat = data.coords.latitude;
 				const lon = data.coords.longitude;
-				const isOutside = lon > area.maxLon || lon < area.minLon || lat > area.maxLat || lat < area.minLat;
+				const isOutside = lon > maxLon || lon < minLon || lat > maxLat || lat < minLat;
 				document.getElementById('error-layer').style.display = isOutside ? 'flex' : 'none';
-				const height = getHeight(lat, lon);
-				const camera = document.querySelector('[gps-camera]');
-				camera.setAttribute('position', {
-					x: 0,
-					y: height + 1.6,
-					z: 0
-				});
 
-				console.log(data.coords);
+				// Hide distance arrows
+				const objects = document.querySelectorAll("[gps-entity-place]");
+				for (let object of objects) {
+					const distance = object.getAttribute('distance');
+					object.setAttribute('visible', distance < 25);
+				}
 			}
 		}
 
@@ -302,7 +220,7 @@
 <!---->
 <!---->
 
-<img id="logo" src="logo.jpg" onclick="window.addMeasure()">
+<img id="logo" src="logo.jpg" onclick="window.forceSimulated()">
 
 <a-scene
 		id="car-scene"
@@ -356,28 +274,47 @@
 
 	<a-entity id="path-scene-root">
 		<a-entity light="type: ambient; color: #CCC; intensity: 2"></a-entity>
-		<a-entity light="type: directional; color: #CFC; intensity: 4" position="-1.5 1.0 1.0"></a-entity>
-		<a-entity light="type: directional; color: #FCC; intensity: 4" position="1.5 1.1 -1.0"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50822784; longitude: 18.54727361' rotation="0 -86 90" scale="0.005 0.005 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50817661; longitude: 18.54755617' rotation="0 -17 90" scale="0.005 0.005 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50821566; longitude: 18.54782801' rotation="0 -12 90" scale="0.005 0.005 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50827985; longitude: 18.54791904' rotation="0 58 90" scale="0.005 0.005 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity light="type: directional; color: #FFF; intensity: 1" position="-1.5 1.0 1.0"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50766; longitude: 18.54696' rotation="0 -145 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50772; longitude: 18.54712' rotation="0 -145 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50778; longitude: 18.54727?' rotation="0 -145 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50785; longitude: 18.54747' rotation="0 -145 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
 
-		<a-entity gps-entity-place='latitude: 54.5081995; longitude: 18.5481069' rotation="0 -33 90" scale="0.005 0.005 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.5081593; longitude: 18.5482806' rotation="0 -23 90" scale="0.005 0.005 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.5080992; longitude: 18.548565' rotation="0 -23 90" scale="0.005 0.005 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.5080548; longitude: 18.5486562' rotation="0 -14 90" scale="0.005 0.005 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.5078249; longitude: 18.5485687' rotation="0 264 90" scale="0.005 0.005 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.5079179; longitude: 18.5484408' rotation="0 188 90" scale="0.005 0.005 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.5079793; longitude: 18.5480102' rotation="0 176 90" scale="0.005 0.005 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.5079959; longitude: 18.5477267' rotation="0 173 90" scale="0.005 0.005 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.5079531; longitude: 18.5474787' rotation="0 219 90" scale="0.005 0.005 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.5078088; longitude: 18.5473201' rotation="0 219 90" scale="0.005 0.005 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.5077978; longitude: 18.5471903' rotation="0 226 90" scale="0.005 0.005 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.5077278; longitude: 18.5469842' rotation="0 224 90" scale="0.005 0.005 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50794; longitude: 18.54771' rotation="0 -195 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50793; longitude: 18.54786' rotation="0 -195 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50790; longitude: 18.54805' rotation="0 -195 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50789; longitude: 18.54817' rotation="0 -195 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50787; longitude: 18.54832' rotation="0 -195 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50785; longitude: 18.54849' rotation="0 -195 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50783; longitude: 18.54864' rotation="0 -102 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50788; longitude: 18.54866' rotation="0 -102 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50793; longitude: 18.54868' rotation="0 -102 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50799; longitude: 18.54871' rotation="0 -51 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50803; longitude: 18.54866' rotation="0 -26 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50806981598308; longitude: 18.54852380290372' rotation="0 -26 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50810655784916; longitude: 18.548399023958908' rotation="0 -26 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50813634564967; longitude: 18.548301497634252' rotation="0 -26 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.508182007045995; longitude: 18.548148635754195' rotation="0 -32 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50822153605354; longitude: 18.54803517686324' rotation="0 -52 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50828100053982; longitude: 18.547958027238735' rotation="0 -52 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.508332983969574; longitude: 18.54789772045014' rotation="0 44 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.508288862206015; longitude: 18.547820343499023' rotation="0 75 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50819780362947; longitude: 18.547776362892435' rotation="0 -14 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.508215079785764; longitude: 18.54763295205499' rotation="0 -34 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50824599002694; longitude: 18.547552879349308' rotation="0 -15 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50826356527205; longitude: 18.547439664804354' rotation="0 -15 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50828055392233; longitude: 18.547340933503765' rotation="0 -15 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082906442317; longitude: 18.54724228552386' rotation="0 -106 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
 	</a-entity>
 
-	<a-camera gps-camera rotation-reader id="path-scene-camera"></a-camera>
+	<a-camera wasd-controls-enabled="true" gps-camera="gpsMinDistance: 0" rotation-reader id="path-scene-camera"></a-camera>
 
 
 </a-scene>
