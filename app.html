@@ -89,7 +89,7 @@
 				const objects = document.querySelectorAll("[gps-entity-place]");
 				for (let object of objects) {
 					const distance = object.getAttribute('distance');
-					object.setAttribute('visible', distance < 25);
+					object.setAttribute('visible', distance < 15);
 				}
 			}
 		}
@@ -162,6 +162,7 @@
 			bottom: 0;
 			width: 100%;
 			height: 100%;
+			z-index: 99;
 			align-items: center;
 			justify-content: center;
 		}
@@ -220,7 +221,7 @@
 <!---->
 <!---->
 
-<img id="logo" src="logo.jpg" onclick="window.forceSimulated()">
+<img id="logo" src="logo.jpg">
 
 <a-scene
 		id="car-scene"
@@ -238,19 +239,20 @@
 		<a-asset-item id="car-model" src="zuk/scene.gltf"></a-asset-item>
 	</a-assets>
 
-	<a-entity id="car-scene-root">
+	<a-entity id="car-scene-root" >
 		<a-entity light="type: ambient; color: #CCC; intensity: 4"></a-entity>
 		<a-entity light="type: directional; color: #CFC; intensity: 4" position="-1.5 1.0 1.0"></a-entity>
 		<a-entity light="type: directional; color: #FCC; intensity: 4" position="1.5 1.1 -1.0"></a-entity>
 		<a-marker id="marker" type="barcode" value="69">
 			<a-entity
-					position="0 0.75 0"
-					scale="4 4 4"
+					position="0 0.25 0"
+					scale="1.5 1.5 1.5"
+					rotation="0 -15 0"
 					gltf-model="#car-model"
 			></a-entity>
-			<a-image src="#car-shadow" rotation="90 0 0" position="0 0.126 0" scale="3.5 6.5 3"></a-image>
-			<a-image src="#car-name" position="0 0 3.31" height="0.24" width="2.7"></a-image>
-			<a-box color="#050505" depth="6.6" height="0.25" width="3"></a-box>
+			<a-image src="#car-shadow" rotation="90 0 15" position="0 0 0" scale="1.2 2.5 0"></a-image>
+			<a-image src="#car-name" rotation="-90 0 0" position="0 0.041 1.22" height="0.12" width="1.1"></a-image>
+			<a-box color="#050505" position="0 0.02 1.2" depth="0.25" height="0.04" width="1.3"></a-box>
 
 		</a-marker>
 	</a-entity>
@@ -275,49 +277,189 @@
 	<a-entity id="path-scene-root">
 		<a-entity light="type: ambient; color: #CCC; intensity: 2"></a-entity>
 		<a-entity light="type: directional; color: #FFF; intensity: 1" position="-1.5 1.0 1.0"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50766; longitude: 18.54696' rotation="0 -145 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50772; longitude: 18.54712' rotation="0 -145 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50778; longitude: 18.54727?' rotation="0 -145 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50785; longitude: 18.54747' rotation="0 -145 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50766; longitude: 18.54696' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5076691469; longitude: 18.54698204315' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5076508531; longitude: 18.54698204315' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5076691469; longitude: 18.546937956849998' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5076508531; longitude: 18.546937956849998' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
 
-		<a-entity gps-entity-place='latitude: 54.50794; longitude: 18.54771' rotation="0 -195 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50772; longitude: 18.54712' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5077291469; longitude: 18.54714204315' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5077108531; longitude: 18.54714204315' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5077291469; longitude: 18.54709795685' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5077108531; longitude: 18.54709795685' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
 
-		<a-entity gps-entity-place='latitude: 54.50793; longitude: 18.54786' rotation="0 -195 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50790; longitude: 18.54805' rotation="0 -195 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50789; longitude: 18.54817' rotation="0 -195 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50787; longitude: 18.54832' rotation="0 -195 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50785; longitude: 18.54849' rotation="0 -195 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50778; longitude: 18.54727' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.507789146899995; longitude: 18.54729204315' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5077708531; longitude: 18.54729204315' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.507789146899995; longitude: 18.54724795685' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5077708531; longitude: 18.54724795685' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
 
-		<a-entity gps-entity-place='latitude: 54.50783; longitude: 18.54864' rotation="0 -102 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50785; longitude: 18.54747' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.507859146899996; longitude: 18.54749204315' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078408531; longitude: 18.54749204315' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.507859146899996; longitude: 18.54744795685' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078408531; longitude: 18.54744795685' rotation='0 -145 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
 
-		<a-entity gps-entity-place='latitude: 54.50788; longitude: 18.54866' rotation="0 -102 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50793; longitude: 18.54868' rotation="0 -102 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50794; longitude: 18.54771' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.507949146899996; longitude: 18.54773204315' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5079308531; longitude: 18.54773204315' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.507949146899996; longitude: 18.547687956849998' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5079308531; longitude: 18.547687956849998' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
 
-		<a-entity gps-entity-place='latitude: 54.50799; longitude: 18.54871' rotation="0 -51 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50793; longitude: 18.54786' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5079391469; longitude: 18.54788204315' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5079208531; longitude: 18.54788204315' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5079391469; longitude: 18.54783795685' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5079208531; longitude: 18.54783795685' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
 
-		<a-entity gps-entity-place='latitude: 54.50803; longitude: 18.54866' rotation="0 -26 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5079; longitude: 18.54805' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5079091469; longitude: 18.54807204315' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078908531; longitude: 18.54807204315' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5079091469; longitude: 18.54802795685' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078908531; longitude: 18.54802795685' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
 
-		<a-entity gps-entity-place='latitude: 54.50806981598308; longitude: 18.54852380290372' rotation="0 -26 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50810655784916; longitude: 18.548399023958908' rotation="0 -26 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50813634564967; longitude: 18.548301497634252' rotation="0 -26 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50789; longitude: 18.54817' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078991469; longitude: 18.54819204315' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.507880853100005; longitude: 18.54819204315' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078991469; longitude: 18.54814795685' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.507880853100005; longitude: 18.54814795685' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
 
-		<a-entity gps-entity-place='latitude: 54.508182007045995; longitude: 18.548148635754195' rotation="0 -32 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50822153605354; longitude: 18.54803517686324' rotation="0 -52 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50828100053982; longitude: 18.547958027238735' rotation="0 -52 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.508332983969574; longitude: 18.54789772045014' rotation="0 44 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.508288862206015; longitude: 18.547820343499023' rotation="0 75 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50819780362947; longitude: 18.547776362892435' rotation="0 -14 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.508215079785764; longitude: 18.54763295205499' rotation="0 -34 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50824599002694; longitude: 18.547552879349308' rotation="0 -15 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50826356527205; longitude: 18.547439664804354' rotation="0 -15 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.50828055392233; longitude: 18.547340933503765' rotation="0 -15 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
-		<a-entity gps-entity-place='latitude: 54.5082906442317; longitude: 18.54724228552386' rotation="0 -106 90" scale="0.003 0.003 0.005" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-entity-place='latitude: 54.50787; longitude: 18.54832' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.507879146899995; longitude: 18.54834204315' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078608531; longitude: 18.54834204315' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.507879146899995; longitude: 18.54829795685' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078608531; longitude: 18.54829795685' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50785; longitude: 18.54849' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.507859146899996; longitude: 18.54851204315' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078408531; longitude: 18.54851204315' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.507859146899996; longitude: 18.54846795685' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078408531; longitude: 18.54846795685' rotation='0 -195 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50783; longitude: 18.54864' rotation='0 -102 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078391469; longitude: 18.54866204315' rotation='0 -102 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078208531; longitude: 18.54866204315' rotation='0 -102 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078391469; longitude: 18.54861795685' rotation='0 -102 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078208531; longitude: 18.54861795685' rotation='0 -102 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50788; longitude: 18.54866' rotation='0 -102 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078891469; longitude: 18.548682043150002' rotation='0 -102 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078708531; longitude: 18.548682043150002' rotation='0 -102 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078891469; longitude: 18.54863795685' rotation='0 -102 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5078708531; longitude: 18.54863795685' rotation='0 -102 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50793; longitude: 18.54868' rotation='0 -102 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5079391469; longitude: 18.54870204315' rotation='0 -102 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5079208531; longitude: 18.54870204315' rotation='0 -102 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5079391469; longitude: 18.54865795685' rotation='0 -102 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5079208531; longitude: 18.54865795685' rotation='0 -102 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50799; longitude: 18.54871' rotation='0 -51 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5079991469; longitude: 18.54873204315' rotation='0 -51 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5079808531; longitude: 18.54873204315' rotation='0 -51 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5079991469; longitude: 18.54868795685' rotation='0 -51 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5079808531; longitude: 18.54868795685' rotation='0 -51 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50803; longitude: 18.54866' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.508039146899996; longitude: 18.548682043150002' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5080208531; longitude: 18.548682043150002' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.508039146899996; longitude: 18.54863795685' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5080208531; longitude: 18.54863795685' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50806; longitude: 18.54852' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5080691469; longitude: 18.54854204315' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5080508531; longitude: 18.54854204315' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5080691469; longitude: 18.54849795685' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5080508531; longitude: 18.54849795685' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.5081; longitude: 18.54839' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5081091469; longitude: 18.54841204315' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5080908531; longitude: 18.54841204315' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5081091469; longitude: 18.54836795685' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5080908531; longitude: 18.54836795685' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50813; longitude: 18.5483' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5081391469; longitude: 18.54832204315' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5081208531; longitude: 18.54832204315' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5081391469; longitude: 18.54827795685' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5081208531; longitude: 18.54827795685' rotation='0 -26 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50818; longitude: 18.54814' rotation='0 -32 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5081891469; longitude: 18.54816204315' rotation='0 -32 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.508170853100005; longitude: 18.54816204315' rotation='0 -32 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5081891469; longitude: 18.54811795685' rotation='0 -32 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.508170853100005; longitude: 18.54811795685' rotation='0 -32 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50822; longitude: 18.54803' rotation='0 -52 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082291469; longitude: 18.54805204315' rotation='0 -52 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082108531; longitude: 18.54805204315' rotation='0 -52 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082291469; longitude: 18.54800795685' rotation='0 -52 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082108531; longitude: 18.54800795685' rotation='0 -52 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50828; longitude: 18.54795' rotation='0 -52 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082891469; longitude: 18.54797204315' rotation='0 -52 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082708531; longitude: 18.54797204315' rotation='0 -52 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082891469; longitude: 18.54792795685' rotation='0 -52 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082708531; longitude: 18.54792795685' rotation='0 -52 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50833; longitude: 18.54789' rotation='0 44 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5083391469; longitude: 18.54791204315' rotation='0 44 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5083208531; longitude: 18.54791204315' rotation='0 44 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5083391469; longitude: 18.54786795685' rotation='0 44 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5083208531; longitude: 18.54786795685' rotation='0 44 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50828; longitude: 18.54782' rotation='0 75 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082891469; longitude: 18.547842043150002' rotation='0 75 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082708531; longitude: 18.547842043150002' rotation='0 75 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082891469; longitude: 18.54779795685' rotation='0 75 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082708531; longitude: 18.54779795685' rotation='0 75 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50819; longitude: 18.54777' rotation='0 -14 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5081991469; longitude: 18.54779204315' rotation='0 -14 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5081808531; longitude: 18.54779204315' rotation='0 -14 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5081991469; longitude: 18.54774795685' rotation='0 -14 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5081808531; longitude: 18.54774795685' rotation='0 -14 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50821; longitude: 18.54763' rotation='0 -34 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082191469; longitude: 18.547652043150002' rotation='0 -34 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082008531; longitude: 18.547652043150002' rotation='0 -34 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082191469; longitude: 18.54760795685' rotation='0 -34 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082008531; longitude: 18.54760795685' rotation='0 -34 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50824; longitude: 18.54755' rotation='0 -15 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082491469; longitude: 18.54757204315' rotation='0 -15 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082308531; longitude: 18.54757204315' rotation='0 -15 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082491469; longitude: 18.54752795685' rotation='0 -15 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082308531; longitude: 18.54752795685' rotation='0 -15 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50826; longitude: 18.54743' rotation='0 -15 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082691469; longitude: 18.54745204315' rotation='0 -15 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082508531; longitude: 18.54745204315' rotation='0 -15 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082691469; longitude: 18.547407956849998' rotation='0 -15 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082508531; longitude: 18.547407956849998' rotation='0 -15 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50828; longitude: 18.54734' rotation='0 -15 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082891469; longitude: 18.54736204315' rotation='0 -15 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082708531; longitude: 18.54736204315' rotation='0 -15 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082891469; longitude: 18.547317956849998' rotation='0 -15 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082708531; longitude: 18.547317956849998' rotation='0 -15 90' scale='0.005 0.005 0.012' gltf-model='#arrow-model'></a-entity>
+
+		<a-entity gps-entity-place='latitude: 54.50829; longitude: 18.54724' rotation='90 -106 90' scale='0.007 0.007 0.007' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082991469; longitude: 18.54726204315' rotation='90 -106 90' scale='0.007 0.007 0.007' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.508280853100004; longitude: 18.54726204315' rotation='90 -106 90' scale='0.007 0.007 0.007' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.5082991469; longitude: 18.547217956849998' rotation='90 -106 90' scale='0.007 0.007 0.007' gltf-model='#arrow-model'></a-entity>
+		<a-entity gps-entity-place='latitude: 54.508280853100004; longitude: 18.547217956849998' rotation='90 -106 90' scale='0.007 0.007 0.007' gltf-model='#arrow-model'></a-entity>
 	</a-entity>
 
-	<a-camera wasd-controls-enabled="true" gps-camera="gpsMinDistance: 0" rotation-reader id="path-scene-camera"></a-camera>
+	<a-camera wasd-controls-enabled="true" gps-camera="gpsMinDistance: 0; simulateLatitude: 0; simulateLongitude: 0" rotation-reader id="path-scene-camera"></a-camera>
 
 
 </a-scene>
 
 </body>
 </html>
+
+// 54.50799041114903, 18.548748486074622
+// 54.507999558049924, 18.548770529233288
+// 0.0000091469  0.00002204315
