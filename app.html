@@ -1,22 +1,134 @@
-
 <!DOCTYPE html>
 <html>
 
 <head>
 	<script>
 
-		// Message to index to remove loader
+		// Measuring
+		let measures = [];
+		let heading = 0;
+
+
+		window.addEventListener("deviceorientationabsolute", (e) => heading = e.webkitCompassHeading || Math.abs(e.alpha - 360), true);
+		window.addMeasure = () => {
+			navigator.geolocation.getCurrentPosition(
+				(data) => {
+					console.log(data);
+					const lat = data.coords.latitude;
+					const lon = data.coords.longitude;
+					const alt = data.coords.altitude;
+					const head = -(heading - 270);
+					const obj = { lat, lon, alt, head };
+					measures.push(obj);
+					navigator.clipboard.writeText(JSON.stringify(measures, null, 0)).then(() => window.alert(JSON.stringify(obj, null, 0)));
+				},
+				(d) => {
+					window.alert('Failed to add');
+					console.log(d);
+				},
+				{
+					enableHighAccuracy: true,
+					maximumAge: 0
+				}
+			);
+		}
+
+		// Replace alerts
+		const realAlert = window.alert;
+		let showedCameraError = false;
+		window.alert = (error) => {
+			let message = error.toString();
+
+			if (message.includes('Webcam')) {
+				message = showedCameraError ? null : `[PL] InstaSolution™ wymaga dostępu do kamery!\n[EN] InstaSolution™ requires access to the camera!`;
+				showedCameraError = true;
+			}
+
+			if(message) {
+				console.error(message);
+				realAlert(message);
+			}
+		}
+
+		let hasLocationPermission = false;
+		let domContentLoaded = false;
+		let area = undefined;
+
+		window.fetch('elevation.json').then(response => response.json()).then(data => {
+			elevationsLoaded = true;
+			area = data;
+			tryToInit();
+		})
+
 		document.addEventListener('DOMContentLoaded', () => {
+			domContentLoaded = true;
+			tryToInit();
+		});
+
+		function tryToInit() {
+			if (domContentLoaded && area) init();
+		}
+
+		async function init() {
+			handleScenesLoading();
+			handleSceneSwitching();
+			requestGPS();
+		}
+
+		function onScenesReady() {
+			moveObjectsBasedOnElevation();
+			handleGPS();
+		}
+
+		function getVertexHeight(lat, lon) {
+			return area.elevations[lat * (area.stepsLon + 1) + lon];
+		}
+
+		function moveObjectsBasedOnElevation() {
+			const objects = document.querySelectorAll("[gps-projected-entity-place]");
+
+			for (let object of objects) {
+				const position = object.getAttribute('position');
+				const coords = object.getAttribute('gps-projected-entity-place');
+				const height = getHeight(coords.latitude, coords.longitude);
+				object.setAttribute('position', {
+					x: position.x,
+					y: position.y + height,
+					z: position.z
+				});
+			}
+		}
+
+		function getHeight(lat, lon) {
+			const localLat = Math.min(Math.max(lat, area.minLat), area.maxLat - area.stepLat / 1000) - area.minLat;
+			const localLon = Math.min(Math.max(lon, area.minLon), area.maxLon - area.stepLon / 1000) - area.minLon;
+			let stepLat = localLat / area.stepLat;
+			let stepLon = localLon / area.stepLon;
+			const fractionLat = stepLat % 1;
+			const fractionLon = stepLon % 1;
+			stepLat = Math.floor(stepLat);
+			stepLon = Math.floor(stepLon);
+			h00 = getVertexHeight(stepLat, stepLon);
+			h10 = getVertexHeight(stepLat + 1, stepLon);
+			h01 = getVertexHeight(stepLat, stepLon + 1);
+			h11 = getVertexHeight(stepLat + 1, stepLon + 1);
+			h0 = h00 + (h10 - h00) * fractionLat;
+			h1 = h01 + (h11 - h01) * fractionLat;
+			h = h0 + (h1 - h0) * fractionLon;
+			return h;
+		}
+
+		function handleScenesLoading() {
 			let carSceneLoaded = false;
 			let pathSceneLoaded = false;
-
 			function checkIfBothScenesLoaded() {
 				if (carSceneLoaded && pathSceneLoaded) {
-					let interval = setInterval(checkVideo, 100);
-					function checkVideo() {
-						if(document.querySelector('#arjs-video')) {
+					let interval = setInterval(checkReadiness, 100);
+					function checkReadiness() {
+						if (document.querySelector('#arjs-video') && hasLocationPermission) {
 							clearInterval(interval);
-							setTimeout(() => parent.postMessage("apploaded", "*"), 500);
+							setTimeout(() => onScenesReady(), 500);
+							setTimeout(() => parent.postMessage("apploaded", "*"), 1000);
 						}
 					}
 				}
@@ -31,29 +143,46 @@
 				pathSceneLoaded = true;
 				checkIfBothScenesLoaded();
 			});
-		});
+		}
 
-		// Location banner
-		const minX = 54.50734476593547, minY = 18.545945167398138, maxX = 54.5088025841609, maxY = 18.549525607179877;
-		setInterval(function () {
-			window.navigator.geolocation.getCurrentPosition(data => {
-				const x = data.coords.latitude;
-				const y = data.coords.longitude;
-				const outside = x > maxX || x < minX || y > maxY || y < minY;
-				document.getElementById('error-layer').style.display = false ? 'flex' : 'none';
-			})
-		}, 1000);
+		function requestGPS() {
+			navigator.geolocation.getCurrentPosition(
+				() => hasLocationPermission = true,
+				() => window.alert('[PL] InstaSolution™ wymaga dostępu do Twojej lokalizacji!\n[EN] InstaSolution™ requires access your location!')
+			);
+		}
 
-		// Scene switcher based on marker
-		document.addEventListener('DOMContentLoaded', () => {
+		function handleGPS() {
+			navigator.geolocation.watchPosition(onLocationChange, () => {}, {
+				enableHighAccuracy: true,
+				maximumAge: 0
+			});
+
+			function onLocationChange(data) {
+				const lat = data.coords.latitude;
+				const lon = data.coords.longitude;
+				const isOutside = lon > area.maxLon || lon < area.minLon || lat > area.maxLat || lat < area.minLat;
+				document.getElementById('error-layer').style.display = isOutside ? 'flex' : 'none';
+				const height = getHeight(lat, lon);
+				const camera = document.querySelector('[gps-projected-camera]');
+				camera.setAttribute('position', {
+					x: 0,
+					y: height + 1.6,
+					z: 0
+				});
+			}
+		}
+
+		function handleSceneSwitching() {
 			function switchScene(carScene) {
 				let visibleAttribute = document.createAttribute('visible');
 				visibleAttribute.value = carScene ? 'true' : 'false';
 				document.getElementById('car-scene-root').setAttributeNode(visibleAttribute);
+
 				visibleAttribute = document.createAttribute('visible');
 				visibleAttribute.value = carScene ? 'false' : 'true'
 				document.getElementById('path-scene-root').setAttributeNode(visibleAttribute);
-				//console.log('Scene change: ' + carScene);
+
 				document.getElementById('car-scene').style.display = carScene ? 'block' : 'none';
 				document.getElementById('path-scene').style.display = carScene ? 'none' : 'block';
 			}
@@ -75,7 +204,7 @@
 				clearLostTimeout();
 				markerLostTimeout = setTimeout(() => switchScene(false), 500)
 			});
-		});
+		}
 
 
 	</script>
@@ -151,7 +280,6 @@
 	<div id="location-error">
 		[PL] Udaj się na lokalizację startową skrytki i użyj tam aplikacji GEOCACHEX® InstaSolution™ na telefonie.
 		<br>
-		<br>
 		[EN] Go to the cache starting location and use the GEOCACHEX® InstaSolution™ application on your phone there.
 	</div>
 </div>
@@ -171,7 +299,7 @@
 <!---->
 <!---->
 
-<img id="logo" src="logo.jpg">
+<img id="logo" src="logo.jpg" onclick="window.addMeasure()">
 
 <a-scene
 		id="car-scene"
@@ -224,14 +352,22 @@
 	</a-assets>
 
 	<a-entity id="path-scene-root">
-		<a-entity light="type: ambient; color: #CCC; intensity: 4"></a-entity>
+		<a-entity light="type: ambient; color: #CCC; intensity: 2"></a-entity>
 		<a-entity light="type: directional; color: #CFC; intensity: 4" position="-1.5 1.0 1.0"></a-entity>
 		<a-entity light="type: directional; color: #FCC; intensity: 4" position="1.5 1.1 -1.0"></a-entity>
-		<a-box material='color: red' scale='10 10 10'></a-box>
-		<a-box gps-entity-place='latitude: 54.5161216; longitude: 18.5401344' color="#FF0000" depth="10" height="10" width="10"></a-box>
+		<a-entity gps-projected-entity-place='latitude: 54.50781642054153; longitude: 18.54863301311142' rotation="0 -104 90" scale="0.003 0.003 0.003" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-projected-entity-place='latitude: 54.50792336348745; longitude: 18.54867852001745' rotation="0 -104 90" scale="0.003 0.003 0.003" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-projected-entity-place='latitude: 54.508018870341935; longitude: 18.548719492371816' rotation="0 -25 90" scale="0.003 0.003 0.003" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-projected-entity-place='latitude: 54.50806256938976; longitude: 18.548524413436304' rotation="0 -25 90" scale="0.003 0.003 0.003" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-projected-entity-place='latitude: 54.508103210578625; longitude: 18.548398180657035' rotation="0 -25 90" scale="0.003 0.003 0.003" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-projected-entity-place='latitude: 54.50813646922396; longitude: 18.548268287796933' rotation="0 -25 90" scale="0.003 0.003 0.003" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-projected-entity-place='latitude: 54.50818718104013; longitude: 18.548123953974805' rotation="0 -40 90" scale="0.003 0.003 0.003" gltf-model="#arrow-model"></a-entity>
+		<a-entity gps-projected-entity-place='latitude: 54.50824884913539; longitude: 18.54799048400962' rotation="0 -50 90" scale="0.003 0.003 0.003" gltf-model="#arrow-model"></a-entity>
 	</a-entity>
 
-	<a-camera gps-camera rotation-reader id="path-scene-camera"></a-camera>
+	<a-camera gps-projected-camera rotation-reader id="path-scene-camera"></a-camera>
+
+
 </a-scene>
 
 </body>
