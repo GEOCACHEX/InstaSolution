@@ -19,20 +19,25 @@
 	<link rel="preload" href="favicon.jpg" as="image" >
 
 	<script>
+
+		// Caching
 		if ('serviceWorker' in navigator) {
 			window.addEventListener('load', function() {
 
-				/*navigator.serviceWorker.getRegistrations().then(function(registrations) {
+				navigator.serviceWorker.getRegistrations().then(function(registrations) {
 					for(let registration of registrations) {
-						registration.unregister()} })*/
+						registration.unregister()} })
 
+				/*
 				navigator.serviceWorker.register('sw-bundle.js').then(function(registration) {
 					console.log('ServiceWorker registration successful with scope: ', registration.scope);
 				}, function(err) {
 					console.log('ServiceWorker registration failed: ', err);
-				});
+				});*/
 			});
 		}
+
+		// Message
 		window.addEventListener('message' ,function(e) {
 			if(e.data === 'apploaded') {
 				const loader = document.querySelector('#loading-screen');
@@ -41,6 +46,28 @@
 
 			}
 		},false);
+
+		window.addEventListener('DOMContentLoaded', () => getAllPermissions());
+		async function getAllPermissions() {
+
+			try {
+				await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+			} catch(err) {
+				/* handle the error */
+			}
+
+			startApp();
+		}
+
+		function startApp() {
+			let appFrame = document.createElement("iframe");
+			appFrame.id = 'app';
+			appFrame.src = "app/app.html";
+			appFrame.frameBorder = '0';
+			appFrame.scrolling = '0';
+			document.body.appendChild(appFrame);
+		}
+
 	</script>
 
 	<style>
@@ -137,7 +164,7 @@
 	<div class="loader"></div>
 	<div class="loader-text">GEOCACHEX® InstaSolution™</div>
 </div>
-<iframe id="app" src="app/app.html">
+
 	<!---->
 	<!---->
 	<!---->
