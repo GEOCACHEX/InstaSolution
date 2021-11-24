@@ -51,7 +51,7 @@
 		async function getAllPermissions() {
 
 			try {
-				await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+				await navigator.mediaDevices.getUserMedia({ video: { width: 320 }, audio: false });
 			} catch(err) {
 				alert(err);
 				return;
