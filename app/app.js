@@ -275,7 +275,7 @@ function switchPopupToCurrentState() {
 function eulaInit() {
     const text = document.getElementById('eula-text');
     text.style.display = 'none';
-    text.innerHTML = eula.repeat(4);
+    text.innerHTML = eula.repeat(2);
 }
 
 function eulaHandler() {
