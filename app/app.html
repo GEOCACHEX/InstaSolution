@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+
+<!--Tak / uciekajace nie-->
+<!--Falszywy review-->
+<!--Akceptacja EULA-->
+
+<!---->
+<!---->
+<!---->
+<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+<!--Zagadka jest na prawdę absuralnie prosta i przeglądanie tego kodu kompletnie niszczy Ci jakąkolwiek zabawę z podejmowania tego kesza. Przeglądając jedynie kod nie otworzysz pojemnika, na prawdę musisz odpalić appke na telefonie.-->
+<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+<!--The puzzle is really absurdly simple and browsing through this code completely destroys any fun of finding this cache. You won't open the container just by looking at the code, you really need to run this app on a phone.-->
+<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+<!---->
+<!---->
+<!---->
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+	<script src="ar/aframe_1_2_0.min.js"></script>
+	<script src="ar/aframe-ar_3_3_3.min.js"></script>
+	<script src="app.js"></script>
+
+	<link rel="stylesheet" href="app.css">
+
+	<link rel="preload" href="img/1.jpg" as="image" >
+	<link rel="preload" href="img/2.jpg" as="image" >
+	<link rel="preload" href="img/3.jpg" as="image" >
+	<link rel="preload" href="img/4.jpg" as="image" >
+	<link rel="preload" href="img/5.jpg" as="image" >
+	<link rel="preload" href="img/6.jpg" as="image" >
+	<link rel="preload" href="img/7.jpg" as="image" >
+	<link rel="preload" href="img/8.jpg" as="image" >
+	<link rel="preload" href="img/9.jpg" as="image" >
+	<link rel="preload" href="img/logo.jpg" as="image" >
+	<link rel="preload" href="img/pl.png" as="image" >
+	<link rel="preload" href="img/en.png" as="image" >
+	<link rel="preload" href="zuk/scene.bin" as="fetch">
+	<link rel="preload" href="zuk/scene.gltf" as="fetch">
+	<link rel="preload" href="zuk/textures/material_emissive.jpeg" as="image">
+	<link rel="preload" href="zuk/textures/material_metallicRoughness.jpg" as="image">
+	<link rel="preload" href="zuk/textures/material_normal.jpeg" as="image">
+	<link rel="preload" href="zuk/textures/shadow.png" as="image">
+	<link rel="preload" href="zuk/textures/name.png" as="image">
+	<link rel="preload" href="zuk/textures/material_baseColor.jpeg" as="image">
+
+</head>
+<body>
+
+<!---->
+<!---->
+<!---->
+<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+<!--Zagadka jest na prawdę absuralnie prosta i przeglądanie tego kodu kompletnie niszczy Ci jakąkolwiek zabawę z podejmowania tego kesza. Przeglądając jedynie kod nie otworzysz pojemnika, na prawdę musisz odpalić appke na telefonie.-->
+<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+<!--The puzzle is really absurdly simple and browsing through this code completely destroys any fun of finding this cache. You won't open the container just by looking at the code, you really need to run this app on a phone.-->
+<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+<!---->
+<!---->
+<!---->
+
+<div id="popup-layer">
+	<div id="language-select">
+		<button class="button language-button" onclick="selectLanguage(true)">Polski<img src="img/pl.png"></button>
+		<button class="button language-button" onclick="selectLanguage(false)">English<img src="img/en.png"></button>
+	</div>
+
+	<!---->
+	<!---->
+	<!---->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!--Zagadka jest na prawdę absuralnie prosta i przeglądanie tego kodu kompletnie niszczy Ci jakąkolwiek zabawę z podejmowania tego kesza. Przeglądając jedynie kod nie otworzysz pojemnika, na prawdę musisz odpalić appke na telefonie.-->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!--The puzzle is really absurdly simple and browsing through this code completely destroys any fun of finding this cache. You won't open the container just by looking at the code, you really need to run this app on a phone.-->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!---->
+	<!---->
+	<!---->
+
+	<div id="init" class="coord-locked">
+		<span data-pl>Udaj się na koordynaty startowe demonstracyjnej skrytki GEOCACHEX® InstaSolution™.</span>
+		<span data-en>Go to the starting coordinates of the GEOCACHEX® InstaSolution™ demo cache.</span>
+		<img src="img/1.jpg">
+	</div>
+	<div id="eula">
+		<span data-pl>Przed rozpoczęciem zabawy z aplikacją GEOCACHEX® InstaSolution™ prosimy o dokładne przeczytanie umowy licencyjnej użytkownika końcowego.</span>
+		<span data-en>Please read the end user license agreement carefully before you start playing with the GEOCACHEX® InstaSolution™ application</span>
+		<div class="buttons"><button class="button" onclick="advance()">
+			<span data-pl>Dobrze, przeczytam uważnie!</span>
+			<span data-en>Okay, I'll read it carefully!</span>
+		</button></div>
+	</div>
+	<div id="eula2">
+		<div id="eula-timer">3</div>
+		<span id="eula-text"></span>
+	</div>
+	<div id="eula3">
+		<span data-pl>Czy przeczytałeś dokładnie całość umowy licencyjnej użytkownika końcowego i zgadasz się na wszystkie warunki w niej zawarte?</span>
+		<span data-en>Have you read the entire of the end user license agreement carefully and agree to all its terms?</span>
+		<div class="buttons"><button class="button" onclick="advance()">
+			<span data-pl>Tak, tak! Oczywiście!</span>
+			<span data-en>Yes, yes! Of course!</span>
+		</button></div>
+	</div>
+
+	<!---->
+	<!---->
+	<!---->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!--Zagadka jest na prawdę absuralnie prosta i przeglądanie tego kodu kompletnie niszczy Ci jakąkolwiek zabawę z podejmowania tego kesza. Przeglądając jedynie kod nie otworzysz pojemnika, na prawdę musisz odpalić appke na telefonie.-->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!--The puzzle is really absurdly simple and browsing through this code completely destroys any fun of finding this cache. You won't open the container just by looking at the code, you really need to run this app on a phone.-->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!---->
+	<!---->
+	<!---->
+
+	<div id="coord1" class="coord-locked">
+		<span data-pl>Świetnie! InstaSolution™ pokieruje Cię jak dziecko za rączkę bezpośrednio do skrytki! Udaj się teraz tutaj...</span>
+		<span data-en>Excellent! InstaSolution™ will lead you by the hand like a child directly to the cache! Go here now...</span>
+		<img src="img/2.jpg">
+	</div>
+	<div id="coord2" class="coord-locked">
+		<span data-pl>I grzecznie idziemy dalej tutaj...</span>
+		<span data-en>And we politely go further here...</span>
+		<img src="img/3.jpg">
+	</div>
+	<div id="coord3" class="coord-locked">
+		<span data-pl>I teraz tutaj, ale nie przechodź jeszcze przez pasy...</span>
+		<span data-en>And now here, but don't cross the crosswalk just yet...</span>
+		<img src="img/4.jpg">
+	</div>
+	<div id="quiz1">
+		<span data-pl>Zanim przejdziesz przez pasy, prosimy o wypełnienie krótkiej ankiety marketingowej.</span>
+		<span data-en>Before you go through the crosswalk, please complete a short marketing survey.</span>
+		<div class="buttons"><button class="button" onclick="advance()">
+			<span data-pl>OK! Uwielbiam ankiety!</span>
+			<span data-en>OKAY! I love surveys!</span>
+		</button></div>
+	</div>
+	<div id="quiz2">
+		<span data-pl>Czy jesteś zadowolony z aplikacji InstaSolution™?</span>
+		<span data-en>Are you satisfied with the InstaSolution™ application?</span>
+		<div class="buttons">
+			<button class="button" onclick="advance()">
+				<span data-pl>Oj tak!!</span>
+				<span data-en>Oh yes!</span>
+			</button>
+			<button class="button" onclick="moveQuizButton(this)">
+				<span data-pl>Nie...</span>
+				<span data-en>No...</span>
+			</button>
+		</div>
+	</div>
+
+	<!---->
+	<!---->
+	<!---->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!--Zagadka jest na prawdę absuralnie prosta i przeglądanie tego kodu kompletnie niszczy Ci jakąkolwiek zabawę z podejmowania tego kesza. Przeglądając jedynie kod nie otworzysz pojemnika, na prawdę musisz odpalić appke na telefonie.-->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!--The puzzle is really absurdly simple and browsing through this code completely destroys any fun of finding this cache. You won't open the container just by looking at the code, you really need to run this app on a phone.-->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!---->
+	<!---->
+	<!---->
+
+	<div id="quiz3">
+		<span data-pl>Czy poleciłbyś aplikację InstaSolution™ całej swojej rodzinie?</span>
+		<span data-en>Would you recommend InstaSolution™ to your entire family?</span>
+		<div class="buttons">
+			<button class="button" onclick="advance()">
+				<span data-pl>Tak!</span>
+				<span data-en>Yes!</span>
+			</button>
+			<button class="button" onclick="moveQuizButton(this)">
+				<span data-pl>Żartujecie?</span>
+				<span data-en>Are you joking?</span>
+			</button>
+		</div>
+	</div>
+	<div id="quiz4">
+		<span data-pl>W skali od 1 do 5, jak bardzo jesteś zadowolony z usług firmy GEOCACHEX®?</span>
+		<span data-en>On a scale of 1 to 5, how satisfied are you with the GEOCACHEX® service?</span>
+		<div class="buttons small">
+			<button class="button" onclick="moveQuizButton(this)">
+				<span data-pl>1</span>
+			</button>
+			<button class="button" onclick="moveQuizButton(this)">
+				<span data-pl>2</span>
+			</button>
+			<button class="button" onclick="moveQuizButton(this)">
+				<span data-pl>3</span>
+			</button>
+			<button class="button" onclick="moveQuizButton(this)">
+				<span data-pl>4</span>
+			</button>
+			<button class="button" onclick="advance()">
+				<span data-pl>5</span>
+			</button>
+		</div>
+	</div>
+	<div id="coord4" class="coord-locked">
+		<span data-pl>Dziękujemy! Możesz przejść przez pasy...</span>
+		<span data-en>Thank you, you can cross the crosswalk...</span>
+		<img src="img/5.jpg">
+	</div>
+	<div id="coord5" class="coord-locked">
+		<span data-pl>Teraz tutaj pod górkę...</span>
+		<span data-en>Now up the hill here...</span>
+		<img src="img/6.jpg">
+	</div>
+	<div id="coord6" class="coord-locked">
+		<span data-pl>Skręć w lewo tutaj i poczekaj chwilę...</span>
+		<span data-en>Turn left here and wait a minute ...</span>
+		<img src="img/7.jpg">
+	</div>
+
+	<!---->
+	<!---->
+	<!---->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!--Zagadka jest na prawdę absuralnie prosta i przeglądanie tego kodu kompletnie niszczy Ci jakąkolwiek zabawę z podejmowania tego kesza. Przeglądając jedynie kod nie otworzysz pojemnika, na prawdę musisz odpalić appke na telefonie.-->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!--The puzzle is really absurdly simple and browsing through this code completely destroys any fun of finding this cache. You won't open the container just by looking at the code, you really need to run this app on a phone.-->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!---->
+	<!---->
+	<!---->
+
+	<div id="review1">
+		<span data-pl>Jesteś już bardzo blisko skrytki demonstracyjnej, lecz najpierw prosimy o krótką recenzję naszej aplikacji!</span>
+		<span data-en>You are now very close to the demo cache, but first please give us a short review of our app!</span>
+		<div class="buttons"><button class="button" onclick="advance()">
+			<span data-pl>Oooo! Napiszę!</span>
+			<span data-en>Oooo! I will!</span>
+		</button></div>
+	</div>
+	<div id="review2">
+		<span data-pl>Napisz krótką recenzje tutaj:</span>
+		<span data-en>Write a short review here:</span>
+		<input id="review-input" type="text" oninput="onReviewChange(this)">
+		<div class="buttons"><button id="review-button" class="button" onclick="advance()" disabled>
+			<span data-pl >Skończyłem!</span>
+			<span data-en>Done!</span>
+		</button></div>
+	</div>
+	<div id="coord7" class="coord-locked">
+		<span data-pl>Dziękujemy za tak pozytywną recenzję! Przejdź teraz tutaj...</span>
+		<span data-en>Thank you for such a positive review! Go here now ...</span>
+		<img src="img/8.jpg">
+	</div>
+
+	<!---->
+	<!---->
+	<!---->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!--Zagadka jest na prawdę absuralnie prosta i przeglądanie tego kodu kompletnie niszczy Ci jakąkolwiek zabawę z podejmowania tego kesza. Przeglądając jedynie kod nie otworzysz pojemnika, na prawdę musisz odpalić appke na telefonie.-->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!--The puzzle is really absurdly simple and browsing through this code completely destroys any fun of finding this cache. You won't open the container just by looking at the code, you really need to run this app on a phone.-->
+	<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+	<!---->
+	<!---->
+	<!---->
+
+	<div id="coord8" class="coord-locked">
+		<span data-pl>I jeszcze tylko kilka metrów...!</span>
+		<span data-en>And only a few more meters...!</span>
+		<img src="img/9.jpg">
+	</div>
+	<div id="enter">
+		<span data-pl>Nie zamykaj jeszcze InstaSolution™! Teraz wejdź do biblioteki i poszukaj logo GEOCACHEX® na parapecie po lewej stronie po wejściu!</span>
+		<span data-en>Don't close InstaSolution™ yet! Now go into the library and look for the GEOCACHEX® logo on the windowsill on the left side after entering!</span>
+		<div class="buttons"><button class="button" onclick="advance()">
+			<span data-pl>Huraa! Znalazłem!</span>
+			<span data-en>Hooray! I found it!</span>
+		</button></div>
+	</div>
+	<div id="end">
+		<span data-pl>InstaSolution™ pomaga nie tylko w lokalizowaniu, ale i w otwieraniu skrytek! Zeskanuj specjalny tag za pomocą aplikacji InstaSolution™ na skrytce demonstracyjnej i znajdź kod!</span>
+		<span data-en>InstaSolution™ helps not only to locate, but also to open caches! Scan a special tag on the demo cache with the InstaSolution™ application and find the code!</span>
+	</div>
+</div>
+
+<!---->
+<!---->
+<!---->
+<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+<!--Zagadka jest na prawdę absuralnie prosta i przeglądanie tego kodu kompletnie niszczy Ci jakąkolwiek zabawę z podejmowania tego kesza. Przeglądając jedynie kod nie otworzysz pojemnika, na prawdę musisz odpalić appke na telefonie.-->
+<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+<!--The puzzle is really absurdly simple and browsing through this code completely destroys any fun of finding this cache. You won't open the container just by looking at the code, you really need to run this app on a phone.-->
+<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+<!---->
+<!---->
+<!---->
+
+<img id="logo" src="img/logo.jpg">
+
+<a-scene
+		id="car-scene"
+		loading-screen="enabled: false"
+		shadow="type: pcf"
+		renderer="logarithmicDepthBuffer: true;antialias: true;alpha: true"
+		vr-mode-ui="enabled: false"
+		embedded
+		light="defaultLightsEnabled: false"
+		arjs="detectionMode: mono_and_matrix; matrixCodeType: 4x4_BCH_13_9_3;"
+>
+	<a-assets>
+		<img id="car-shadow" src="zuk/textures/shadow.png">
+		<img id="car-name" src="zuk/textures/name.png">
+		<a-asset-item id="car-model" src="zuk/scene.gltf"></a-asset-item>
+	</a-assets>
+
+	<a-entity id="car-scene-root" >
+		<a-entity light="type: ambient; color: #CCC; intensity: 4"></a-entity>
+		<a-entity light="type: directional; color: #CFC; intensity: 4" position="-1.5 1.0 1.0"></a-entity>
+		<a-entity light="type: directional; color: #FCC; intensity: 4" position="1.5 1.1 -1.0"></a-entity>
+		<a-marker id="marker" type="barcode" value="69">
+			<a-entity
+					position="0 0.25 0"
+					scale="1.5 1.5 1.5"
+					rotation="0 -15 0"
+					gltf-model="#car-model"
+			></a-entity>
+			<a-image src="#car-shadow" rotation="90 0 15" position="0 0 0" scale="1.2 2.5 0"></a-image>
+			<a-image src="#car-name" rotation="-90 0 0" position="0 0.041 1.22" height="0.12" width="1.1"></a-image>
+			<a-box color="#050505" position="0 0.02 1.2" depth="0.25" height="0.04" width="1.3"></a-box>
+
+		</a-marker>
+	</a-entity>
+	<a-entity camera id="car-scene-camera"></a-entity>
+
+</a-scene>
+
+</body>
+</html>

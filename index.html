@@ -21,20 +21,23 @@
 		if ('serviceWorker' in navigator) {
 			window.addEventListener('load', function() {
 
-				navigator.serviceWorker.getRegistrations().then(function(registrations) {
+				/*navigator.serviceWorker.getRegistrations().then(function(registrations) {
 					for(let registration of registrations) {
-						registration.unregister()} })
+						registration.unregister()} })*/
 
-				/*navigator.serviceWorker.register('sw-bundle.js').then(function(registration) {
+				navigator.serviceWorker.register('sw-bundle.js').then(function(registration) {
 					console.log('ServiceWorker registration successful with scope: ', registration.scope);
 				}, function(err) {
 					console.log('ServiceWorker registration failed: ', err);
-				});*/
+				});
 			});
 		}
 		window.addEventListener('message' ,function(e) {
 			if(e.data === 'apploaded') {
-				document.querySelector('#loading-screen').style.display = 'none';
+				const loader = document.querySelector('#loading-screen');
+				loader.classList.add('exit');
+				setTimeout(() => loader.remove(), 1000);
+
 			}
 		},false);
 	</script>
@@ -65,16 +68,22 @@
 		}
 		#loading-screen {
 			position: fixed;
-			top: 0;
+			top: -100%;
 			left: 0;
 			right: 0;
-			bottom: 0;
+			bottom: -100%;
 			background-color: #126524;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			flex-direction: column;
 			z-index: 999999999;
+			transition: all 0.5s ease-in-out;
+		}
+		#loading-screen.exit {
+			opacity: 0;
+			transform: translateY(-50px);
+			pointer-events: none;
 		}
 		.loader,
 		.loader:after {
@@ -127,7 +136,7 @@
 	<div class="loader"></div>
 	<div class="loader-text">GEOCACHEX® InstaSolution™</div>
 </div>
-<iframe id="app" src="app.html">
+<iframe id="app" src="app/app.html">
 	<!---->
 	<!---->
 	<!---->
