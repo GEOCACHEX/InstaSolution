@@ -217,7 +217,7 @@ function setCoordsEntryListener(callback, latMin, lonMin, latMax, lonMax) {
 }
 
 function isPlayerInArea(latMin, lonMin, latMax, lonMax) {
-    return true;
+    //return true;
     return latMin < currentLat && latMax > currentLat && lonMin < currentLon && lonMax > currentLon;
 }
 

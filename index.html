@@ -47,28 +47,6 @@
 			}
 		},false);
 
-		window.addEventListener('DOMContentLoaded', () => getAllPermissions());
-		async function getAllPermissions() {
-
-			try {
-				await navigator.mediaDevices.getUserMedia({ video: { width: 320 }, audio: false });
-			} catch(err) {
-				alert(err);
-				return;
-			}
-
-			startApp();
-		}
-
-		function startApp() {
-			let appFrame = document.createElement("iframe");
-			appFrame.id = 'app';
-			appFrame.src = "app/app.html";
-			appFrame.frameBorder = '0';
-			appFrame.scrolling = '0';
-			document.body.appendChild(appFrame);
-		}
-
 	</script>
 
 	<style>
@@ -177,7 +155,7 @@
 	<!---->
 	<!---->
 	<!---->
-</iframe>
+<iframe id="app" src="app/app.html"></iframe>
 
 </body>
 </html>
