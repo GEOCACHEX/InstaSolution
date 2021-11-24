@@ -201,7 +201,7 @@ function onCoordsChange() {
     if(onCoordsUnlock && isPlayerInArea(lockedCoordsArea.latMin, lockedCoordsArea.lonMin, lockedCoordsArea.latMax, lockedCoordsArea.lonMax)) {
         let delayedCallback = onCoordsUnlock;
         clearCoordsEntryListener();
-        setTimeout(() => delayedCallback(), 3000);
+        setTimeout(() => delayedCallback(), 200);
     }
 }
 
@@ -217,7 +217,7 @@ function setCoordsEntryListener(callback, latMin, lonMin, latMax, lonMax) {
 }
 
 function isPlayerInArea(latMin, lonMin, latMax, lonMax) {
-    //return true;
+    return true;
     return latMin < currentLat && latMax > currentLat && lonMin < currentLon && lonMax > currentLon;
 }
 
