@@ -53,7 +53,8 @@
 			try {
 				await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
 			} catch(err) {
-				/* handle the error */
+				alert(err);
+				return;
 			}
 
 			startApp();
