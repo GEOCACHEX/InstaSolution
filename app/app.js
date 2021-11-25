@@ -37,11 +37,11 @@ const arHtml = `<a-scene
 
 let arScene;
 
-document.addEventListener('DOMContentLoaded', () => {
-    if (didAlreadyGrantPermissions()) {
+document.addEventListener('DOMContentLoaded', (async () => {
+    if (await didAlreadyGrantPermissions()) {
         onAllPermissionsGranted();
     }
-}, true);
+}), true);
 
 window.addEventListener('load', () => {
     initPopups();
@@ -199,11 +199,11 @@ function leaveSingleLanguage(isPolish) {
     }
 }
 
-function selectLanguage(isPolish) {
+async function selectLanguage(isPolish) {
     leaveSingleLanguage(isPolish);
     review = isPolish ? reviewPL : reviewEN;
 
-    if (didAlreadyGrantPermissions()) {
+    if (await didAlreadyGrantPermissions()) {
         switchPopupToCurrentState();
     }
     else {
@@ -223,11 +223,24 @@ function rememberGrantingPermissions() {
     window.localStorage.setItem(permissionsSaveName, 'OK!');
 }
 
-function didAlreadyGrantPermissions() {
-    return !!window.localStorage.getItem(permissionsSaveName);
+async function didAlreadyGrantPermissions() {
+    return !!window.localStorage.getItem(permissionsSaveName) && await hasCameraPermission();
 }
 
-async function askPermissions() {
+async function hasCameraPermission() {
+    try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        console.log(devices)
+        return devices.filter(x => (!!x.deviceId && !!x.label) && x.kind === 'videoinput').length > 0;
+    }
+    catch {
+        return false;
+    }
+}
+
+async function askPermissions(button) {
+
+    button.disabled = true;
 
     // Orientation
     if (deviceTypeRequiresOrientationPermission()) {

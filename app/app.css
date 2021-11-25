@@ -57,6 +57,7 @@ a {
     background-color: #e4fff4;
     padding: 20px;
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    overflow: auto;
 }
 
 .button {
