@@ -9,9 +9,9 @@ const arHtml = `<a-scene
     arjs="detectionMode: mono_and_matrix; matrixCodeType: 4x4_BCH_13_9_3;"
 >
   <a-assets>
-    <img id="car-shadow" src="zuk/textures/shadow.png">
-    <img id="car-name" src="zuk/textures/name.png">
-    <a-asset-item id="car-model" src="zuk/scene.gltf"></a-asset-item>
+    <img id="car-shadow" src="app/zuk/textures/shadow.png">
+    <img id="car-name" src="app/zuk/textures/name.png">
+    <a-asset-item id="car-model" src="app/zuk/scene.gltf"></a-asset-item>
   </a-assets>
 
   <a-entity id="car-scene-root" >
@@ -45,15 +45,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 window.addEventListener('load', () => {
     initPopups();
-    parent.postMessage("apploaded", "*");
+    hideLoader();
     setTimeout(() => switchPopup('language-select'), 300);
 });
+
+function hideLoader() {
+    const loader = document.querySelector('#loading-screen');
+    loader.classList.add('exit');
+    setTimeout(() => loader.remove(), 1000);
+}
 
 function addArElements() {
     const temp = document.createElement('div');
     temp.innerHTML = arHtml;
     console.log(temp.firstChild);
     document.body.appendChild(temp.firstChild);
+
+    console.log(window.frameElement);
 }
 
 function onAllPermissionsGranted() {
@@ -273,11 +281,8 @@ async function askPermissions(button) {
                     track.stop();
                 }
                 hasCameraAccess = true;
-                alert('mediaDevices ok');
             }
-        } catch (e) {
-            alert(e);
-        }
+        } catch (e) {}
 
         // Old API
         if (!hasCameraAccess) {
@@ -288,14 +293,8 @@ async function askPermissions(button) {
                     mandatory: { minWidth: 640, minHeight: 480 }
                 }
             };
-            if (navigator.getUserMedia) navigator.getUserMedia(constraints, () => {
-                hasCameraAccess = true;
-                alert('old api ok');
-            }, e => alert(e));
+            if (navigator.getUserMedia) navigator.getUserMedia(constraints, () => hasCameraAccess = true, () => {});
         }
-
-        // test
-        hasCameraAccess = true;
 
         // Final
         if (hasCameraAccess) {
@@ -337,7 +336,7 @@ function setCoordsEntryListener(callback, latMin, lonMin, latMax, lonMax) {
 }
 
 function isPlayerInArea(latMin, lonMin, latMax, lonMax) {
-    //return true;
+    return true;
     return latMin < currentLat && latMax > currentLat && lonMin < currentLon && lonMax > currentLon;
 }
 
