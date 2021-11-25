@@ -233,7 +233,7 @@ async function hasCameraPermission() {
         console.log(devices)
         return devices.filter(x => (!!x.deviceId && !!x.label) && x.kind === 'videoinput').length > 0;
     }
-    catch {
+    catch (e) {
         return false;
     }
 }
@@ -250,7 +250,7 @@ async function askPermissions(button) {
                 return onPermissionFailure();
             }
         }
-        catch {
+        catch (e) {
             return onPermissionFailure();
         }
     }
