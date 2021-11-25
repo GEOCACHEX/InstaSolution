@@ -281,6 +281,7 @@ async function askPermissions(button) {
                     track.stop();
                 }
                 hasCameraAccess = true;
+                alert('mediaDevices ok')
             }
         }
         catch (e) {
@@ -296,11 +297,14 @@ async function askPermissions(button) {
                     mandatory: { minWidth: 640, minHeight: 480 }
                 }
             };
-            if (navigator.getUserMedia) navigator.getUserMedia(constraints, () => hasCameraAccess = true, (e) => alert(e));
+            if (navigator.getUserMedia) navigator.getUserMedia(constraints, () => {
+                hasCameraAccess = true;
+                alert('old api ok')
+            }, (e) => alert(e));
         }
 
         // Final
-        if (hasCameraAccess || true) {
+        if (true) {
             onAllPermissionsGranted();
             switchPopupToCurrentState();
         } else {
