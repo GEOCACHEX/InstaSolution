@@ -34,9 +34,8 @@
 	<link rel="preload" href="app/zuk/textures/material_baseColor.jpeg" as="image">
 
 	<script>
-
 		// Samsung browser workaround
-		if (!window.frameElement && navigator.userAgent.match(/SAMSUNG|Samsung|SGH-[I|N|T]|GT-[I|N]|SM-[A|N|P|T|Z]|SHV-E|SCH-[I|J|R|S]|SPH-L/i)) {
+		if (!window.frameElement && navigator.userAgent.match(/SamsungBrowser/i)) {
 			window.location.href = 'framed.html';
 		}
 
@@ -44,16 +43,18 @@
 		if ('serviceWorker' in navigator) {
 			window.addEventListener('load', function() {
 
+				/*
 				navigator.serviceWorker.getRegistrations().then(function(registrations) {
 					for(let registration of registrations) {
-						registration.unregister()} })
+						registration.unregister()}
+					}
+				)
+				*/
 
-				/*
-				navigator.serviceWorker.register('sw-bundle.js').then(function(registration) {
-					console.log('ServiceWorker registration successful with scope: ', registration.scope);
-				}, function(err) {
-					console.log('ServiceWorker registration failed: ', err);
-				});*/
+				navigator.serviceWorker.register('sw-bundle.js').then(
+					(registration) => console.log(`SW Success: ${registration.scope}`),
+					(error) => console.log(`SW Fail: ${error}`)
+				);
 			});
 		}
 

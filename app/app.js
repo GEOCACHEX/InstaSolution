@@ -58,10 +58,7 @@ function hideLoader() {
 function addArElements() {
     const temp = document.createElement('div');
     temp.innerHTML = arHtml;
-    console.log(temp.firstChild);
     document.body.appendChild(temp.firstChild);
-
-    console.log(window.frameElement);
 }
 
 function onAllPermissionsGranted() {
@@ -103,19 +100,10 @@ function handleGPS() {
 }
 
 function handleMarkerDetection() {
-
     const layer = document.getElementById('popup-layer');
     const marker = document.getElementById('marker');
-
-    marker.addEventListener('markerFound', () => {
-        console.log('markerFound');
-        layer.classList.add('hidden');
-    });
-
-    marker.addEventListener('markerLost', () => {
-        console.log('markerLost');
-        layer.classList.remove('hidden');
-    });
+    marker.addEventListener('markerFound', () => layer.classList.add('hidden'));
+    marker.addEventListener('markerLost', () => layer.classList.remove('hidden'));
 }
 
 ////////////////////////////////////////////////////////////////////////////////// POPUPS
@@ -235,7 +223,6 @@ async function didAlreadyGrantPermissions() {
 async function hasCameraPermission() {
     try {
         const devices = await navigator.mediaDevices.enumerateDevices();
-        console.log(devices);
         return devices.filter(x => !!x.deviceId && !!x.label && x.kind === 'videoinput').length > 0;
     } catch (e) {
         return false;
@@ -408,10 +395,8 @@ function onReviewChange(input) {
     const button = document.getElementById('review-button');
     if (input.value.length === review.length) {
         button.removeAttribute("disabled");
-        console.log('remove');
     } else {
         button.setAttribute('disabled', '');
-        console.log('add');
     }
 }
 
