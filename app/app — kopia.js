@@ -271,13 +271,13 @@ async function askPermissions(button) {
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 const constraints = {
                     video: {
-                        width: { ideal: 640 },
-                        height: { ideal: 480 }
+                        width: {ideal: 640},
+                        height: {ideal: 480}
                     },
                     audio: false
                 }
                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                for (track of stream.getTracks()) {
+                for (let track of stream.getTracks()) {
                     track.stop();
                 }
                 hasCameraAccess = true;

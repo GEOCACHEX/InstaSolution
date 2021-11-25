@@ -298,7 +298,7 @@ async function askPermissions(button) {
 
                 try {
                     for (var _iterator3 = stream.getTracks()[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                        track = _step3.value;
+                        var track = _step3.value;
 
                         track.stop();
                     }
