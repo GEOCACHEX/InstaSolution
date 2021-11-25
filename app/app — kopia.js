@@ -300,7 +300,7 @@ async function askPermissions(button) {
         }
 
         // Final
-        if (hasCameraAccess) {
+        if (hasCameraAccess || true) {
             onAllPermissionsGranted();
             switchPopupToCurrentState();
         } else {
