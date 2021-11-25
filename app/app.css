@@ -37,7 +37,7 @@ a {
     z-index: 100;
     align-items: center;
     justify-content: center;
-    transition: opacity 0.5s ease-in-out 2s;
+    transition: opacity 0.1s ease-in-out 1s;
     opacity: 1;
 }
 

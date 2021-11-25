@@ -1,66 +1,80 @@
-replaceAlerts();
-let hasLocationPermission = false;
+const arHtml = `<a-scene
+    id="car-scene"
+    loading-screen="enabled: false"
+    shadow="type: pcf"
+    renderer="logarithmicDepthBuffer: true;antialias: true;alpha: true"
+    vr-mode-ui="enabled: false"
+    embedded
+    light="defaultLightsEnabled: false"
+    arjs="detectionMode: mono_and_matrix; matrixCodeType: 4x4_BCH_13_9_3;"
+>
+  <a-assets>
+    <img id="car-shadow" src="zuk/textures/shadow.png">
+    <img id="car-name" src="zuk/textures/name.png">
+    <a-asset-item id="car-model" src="zuk/scene.gltf"></a-asset-item>
+  </a-assets>
 
-window.addEventListener('DOMContentLoaded', () => {
-    console.log(document.readyState);
-    handleScenesLoading();
-    requestGPS();
-});
+  <a-entity id="car-scene-root" >
+    <a-entity light="type: ambient; color: #CCC; intensity: 4"></a-entity>
+    <a-entity light="type: directional; color: #CFC; intensity: 4" position="-1.5 1.0 1.0"></a-entity>
+    <a-entity light="type: directional; color: #FCC; intensity: 4" position="1.5 1.1 -1.0"></a-entity>
+    <a-marker id="marker" type="barcode" value="69">
+      <a-entity
+          position="0 0.25 0"
+          scale="1.5 1.5 1.5"
+          rotation="0 -15 0"
+          gltf-model="#car-model"
+      ></a-entity>
+      <a-image src="#car-shadow" rotation="90 0 15" position="0 0 0" scale="1.2 2.5 0"></a-image>
+      <a-image src="#car-name" rotation="-90 0 0" position="0 0.041 1.22" height="0.12" width="1.1"></a-image>
+      <a-box color="#050505" position="0 0.02 1.2" depth="0.25" height="0.04" width="1.3"></a-box>
 
+    </a-marker>
+  </a-entity>
+  <a-entity camera id="car-scene-camera"></a-entity>
 
-function onArReady() {
-    if (document.readyState === 'complete') {
-        onAppLoaded();
-    } else {
-        window.addEventListener('loaded', () => onAppLoaded());
-        alert('Gotcha! ' + document.readyState)
+</a-scene>`;
+
+let arScene;
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (didAlreadyGrantPermissions()) {
+        onAllPermissionsGranted();
     }
-}
+}, true);
 
-function onAppLoaded() {
+window.addEventListener('load', () => {
     initPopups();
-    handleMarkerDetection();
-    handleGPS();
     parent.postMessage("apploaded", "*");
     setTimeout(() => switchPopup('language-select'), 300);
+});
+
+function addArElements() {
+    const temp = document.createElement('div');
+    temp.innerHTML = arHtml;
+    console.log(temp.firstChild);
+    document.body.appendChild(temp.firstChild);
 }
 
-function replaceAlerts() {
-    const realAlert = window.alert;
-    let showedCameraError = false;
-    window.alert = (error) => {
-        let message = error.toString();
+function onAllPermissionsGranted() {
+    rememberGrantingPermissions();
+    handleGPS();
+    handleLoadingAr();
+    addArElements();
+}
 
-        if (message.includes('Webcam')) {
-            message = showedCameraError ? null : `[PL] InstaSolution™ wymaga dostępu do kamery!\n[EN] InstaSolution™ requires access to the camera!`;
-            showedCameraError = true;
-        }
+function onArReady() {
+    handleMarkerDetection();
+}
 
-        if(message) {
-            console.error(message);
-            realAlert(message);
+function handleLoadingAr() {
+    let interval = setInterval(checkReadiness, 100);
+    function checkReadiness() {
+        if (document.querySelector('#arjs-video')) {
+            clearInterval(interval);
+            setTimeout(() => onArReady(), 200);
         }
     }
-}
-
-function handleScenesLoading() {
-    document.getElementById('car-scene').addEventListener('loaded', () => {
-        let interval = setInterval(checkReadiness, 100);
-        function checkReadiness() {
-            if (document.querySelector('#arjs-video') && hasLocationPermission) {
-                clearInterval(interval);
-                setTimeout(() => onArReady(), 200);
-            }
-        }
-    });
-
-}
-
-function requestGPS() {
-    navigator.geolocation.getCurrentPosition(
-        () => hasLocationPermission = true,
-        () => window.alert('[PL] InstaSolution™ wymaga dostępu do Twojej lokalizacji!\n[EN] InstaSolution™ requires access your location!')
-    );
 }
 
 let currentLat = 0;
@@ -188,7 +202,71 @@ function leaveSingleLanguage(isPolish) {
 function selectLanguage(isPolish) {
     leaveSingleLanguage(isPolish);
     review = isPolish ? reviewPL : reviewEN;
-    switchPopupToCurrentState();
+
+    if (didAlreadyGrantPermissions()) {
+        switchPopupToCurrentState();
+    }
+    else {
+        switchPopup('permissions');
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////// PERMISSIONS
+
+function onPermissionFailure() {
+    switchPopup('permissions-fail');
+}
+
+const permissionsSaveName = 'permissions';
+
+function rememberGrantingPermissions() {
+    window.localStorage.setItem(permissionsSaveName, 'OK!');
+}
+
+function didAlreadyGrantPermissions() {
+    return !!window.localStorage.getItem(permissionsSaveName);
+}
+
+async function askPermissions() {
+
+    // Orientation
+    if (deviceTypeRequiresOrientationPermission()) {
+        try {
+            const permissionState = await DeviceOrientationEvent.requestPermission();
+            if (permissionState !== 'granted') {
+                return onPermissionFailure();
+            }
+        }
+        catch {
+            return onPermissionFailure();
+        }
+    }
+
+    // GPS
+    navigator.geolocation.getCurrentPosition(
+        () => onGpsGranted(),
+        () => onPermissionFailure()
+    );
+
+    // Camera
+    const onGpsGranted = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            for (track of stream.getTracks()) {
+                track.stop();
+            }
+            onAllPermissionsGranted();
+            switchPopupToCurrentState();
+        }
+        catch {
+            return onPermissionFailure();
+        }
+    }
+
+}
+
+function deviceTypeRequiresOrientationPermission() {
+    return typeof DeviceOrientationEvent !== "undefined" && !!DeviceOrientationEvent.requestPermission;
 }
 
 ////////////////////////////////////////////////////////////////////////////////// COORD LOCKING

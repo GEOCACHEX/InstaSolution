@@ -17,9 +17,9 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
+	<script src="app.js"></script>
 	<script src="ar/aframe_1_2_0.min.js"></script>
 	<script src="ar/aframe-ar_3_3_3.min.js"></script>
-	<script src="app.js"></script>
 
 	<link rel="stylesheet" href="app.css">
 
@@ -63,6 +63,20 @@
 	<div id="language-select">
 		<button class="button language-button" onclick="selectLanguage(true)">Polski<img src="img/pl.png"></button>
 		<button class="button language-button" onclick="selectLanguage(false)">English<img src="img/en.png"></button>
+	</div>
+
+	<div id="permissions">
+		<span data-pl>GEOCACHEX® InstaSolution™ wymaga dostępu do <u>kamery</u>, <u>lokalizacji GPS</u> oraz <u>akcelerometru</u> urządzenia.<br><br>Ciepło prosimy o zaakceptowanie wszystkich zapytań o dostęp do tych informacji.</span>
+		<span data-en>GEOCACHEX® InstaSolution™ requires access to the <u>camera</u>, <u>GPS location</u> and <u>accelerometer</u> of this device.<br><br>Please accept all requests for access to this information.</span>
+		<div class="buttons"><button class="button" onclick="askPermissions()">
+			<span data-pl>Rozumiem!</span>
+			<span data-en>I understand!</span>
+		</button></div>
+	</div>
+
+	<div id="permissions-fail">
+		<span data-pl>Nie udało się uzyskać dostępu do <u>kamery</u>, <u>lokalizacji GPS</u> oraz <u>akcelerometru</u> urządzenia.<br><br>Skontaktuj się z właścicielem skrytki, jeśli uważasz, że jest to błąd aplikacji.</span>
+		<span data-en>Unable to access the <u>camera</u>, <u>GPS Location</u> and <u>accelerometer</u> of this device.<br><br>Contact the geocache owner, if you believe this is an application error.</span>
 	</div>
 
 	<!---->
@@ -296,42 +310,7 @@
 
 <img id="logo" src="img/logo.jpg">
 
-<a-scene
-		id="car-scene"
-		loading-screen="enabled: false"
-		shadow="type: pcf"
-		renderer="logarithmicDepthBuffer: true;antialias: true;alpha: true"
-		vr-mode-ui="enabled: false"
-		embedded
-		light="defaultLightsEnabled: false"
-		arjs="detectionMode: mono_and_matrix; matrixCodeType: 4x4_BCH_13_9_3;"
->
-	<a-assets>
-		<img id="car-shadow" src="zuk/textures/shadow.png">
-		<img id="car-name" src="zuk/textures/name.png">
-		<a-asset-item id="car-model" src="zuk/scene.gltf"></a-asset-item>
-	</a-assets>
 
-	<a-entity id="car-scene-root" >
-		<a-entity light="type: ambient; color: #CCC; intensity: 4"></a-entity>
-		<a-entity light="type: directional; color: #CFC; intensity: 4" position="-1.5 1.0 1.0"></a-entity>
-		<a-entity light="type: directional; color: #FCC; intensity: 4" position="1.5 1.1 -1.0"></a-entity>
-		<a-marker id="marker" type="barcode" value="69">
-			<a-entity
-					position="0 0.25 0"
-					scale="1.5 1.5 1.5"
-					rotation="0 -15 0"
-					gltf-model="#car-model"
-			></a-entity>
-			<a-image src="#car-shadow" rotation="90 0 15" position="0 0 0" scale="1.2 2.5 0"></a-image>
-			<a-image src="#car-name" rotation="-90 0 0" position="0 0.041 1.22" height="0.12" width="1.1"></a-image>
-			<a-box color="#050505" position="0 0.02 1.2" depth="0.25" height="0.04" width="1.3"></a-box>
-
-		</a-marker>
-	</a-entity>
-	<a-entity camera id="car-scene-camera"></a-entity>
-
-</a-scene>
 
 </body>
 </html>
