@@ -264,7 +264,7 @@ async function askPermissions(button) {
     // Camera
     const onGpsGranted = async () => {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } });
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640 } });
             for (track of stream.getTracks()) {
                 track.stop();
             }
