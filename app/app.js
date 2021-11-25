@@ -264,7 +264,7 @@ async function askPermissions(button) {
     // Camera
     const onGpsGranted = async () => {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 } });
             for (track of stream.getTracks()) {
                 track.stop();
             }
@@ -308,7 +308,7 @@ function setCoordsEntryListener(callback, latMin, lonMin, latMax, lonMax) {
 }
 
 function isPlayerInArea(latMin, lonMin, latMax, lonMax) {
-    return true;
+    //return true;
     return latMin < currentLat && latMax > currentLat && lonMin < currentLon && lonMax > currentLon;
 }
 
