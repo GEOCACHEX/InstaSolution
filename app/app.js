@@ -271,7 +271,8 @@ async function askPermissions(button) {
             onAllPermissionsGranted();
             switchPopupToCurrentState();
         }
-        catch {
+        catch (e) {
+            alert(e);
             return onPermissionFailure();
         }
     }
