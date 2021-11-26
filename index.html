@@ -1,4 +1,21 @@
 <html>
+
+<!---->
+<!---->
+<!---->
+<!---->
+<!---->
+<!--️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️-->
+<!-- Przeglądając jedynie kod źródłowy nie otworzysz pojemnika (na prawdę!) i więcej czasu zmarnujesz na siedzenie przed komputerem, niż zabawe w terenie z tym keszem! Zagadka jest na prawdę absuralnie prosta, zajmuje kilka minut na miejscu i przeglądanie tego kodu kompletnie niszczy Ci jakąkolwiek zabawę/niepodziankę z podejmowania tego kesza. Po co rujnować sobie zabawę, jeśli i tak nic z tego nie masz? -->
+<!--️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️-->
+<!-- By only browsing the source code, you won't open the container (really!) and you will waste more time sitting in front of the computer than having fun in the field with this cache! The puzzle is really absurdly simple, takes a few minutes on the spot and browsing through this code completely destroys any fun/suprise of finding this cache. Why do you want to ruin your own fun, if there's nothing to gain from it? -->
+<!--️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️-->
+<!---->
+<!---->
+<!---->
+<!---->
+<!---->
+
 <head>
 	<title>GEOCACHEX® InstaSolution™</title>
 	<meta charset="UTF-8">
@@ -8,9 +25,10 @@
 	<link rel="stylesheet" href="app/app.css">
 
 	<link rel="preload" href="favicon.jpg" as="image" >
-	<script src="app/app.js"></script>
+	<script src="app/app.min.js"></script>
 	<script src="app/ar/aframe_1_2_0.min.js"></script>
-	<script src="app/ar/aframe-ar_3_3_3.min.js"></script>
+
+	<link rel="preload" href="app/ar/aframe-ar_3_3_3.min.js" as="script" >
 	<link rel="preload" href="app/img/bg.jpg" as="image" >
 	<link rel="preload" href="app/img/1.jpg" as="image" >
 	<link rel="preload" href="app/img/2.jpg" as="image" >
@@ -156,13 +174,21 @@
 		</button></div>
 	</div>
 	<div id="permissions-fail">
-		<span data-pl>Nie udało się uzyskać dostępu do <u>kamery</u>, <u>lokalizacji GPS</u> lub <u>akcelerometru</u> urządzenia.<br><br>Skontaktuj się z właścicielem skrytki, jeśli uważasz, że jest to błąd aplikacji.</span>
-		<span data-en>Unable to access the <u>camera</u>, <u>GPS Location</u> or the <u>accelerometer</u> of this device.<br><br>Contact the geocache owner, if you believe this is an application error.</span>
+		<span data-pl>Niestety nie udało się uzyskać dostępu do <u>kamery</u>, <u>lokalizacji GPS</u> lub <u>akcelerometru</u> urządzenia.<br><br>W związku z tym InstaSolution™ będzie kontynuować w uproszczonej formie nie wymagającej tych informacji, abyś mógł podjąć skrytkę.</span>
+		<span data-en>Unfortunately we were unable to access the <u>camera</u>, <u>GPS Location</u> or the <u>accelerometer</u> of this device.<br><br>As such, InstaSolution™ will continue in a simplified form not requiring this information, so you can still find the geocache.</span>
+		<div class="buttons"><button class="button" onclick="switchPopupToCurrentState()">
+			<span data-pl>Aha, rozumiem...</span>
+			<span data-en>Ah, I understand...</span>
+		</button></div>
 	</div>
 	<div id="init" class="coord-locked">
 		<span data-pl>Udaj się na koordynaty startowe demonstracyjnej skrytki GEOCACHEX® InstaSolution™.</span>
 		<span data-en>Go to the starting coordinates of the GEOCACHEX® InstaSolution™ demo cache.</span>
 		<img src="app/img/1.jpg">
+		<div class="buttons"><button class="button" onclick="advance()">
+			<span data-pl>Jestem na miejscu!</span>
+			<span data-en>I'm already here!</span>
+		</button></div>
 	</div>
 	<div id="eula">
 		<span data-pl>Przed rozpoczęciem zabawy z aplikacją GEOCACHEX® InstaSolution™ prosimy o dokładne przeczytanie umowy licencyjnej użytkownika końcowego.</span>
@@ -188,16 +214,28 @@
 		<span data-pl>Świetnie! InstaSolution™ pokieruje Cię jak dziecko za rączkę bezpośrednio do skrytki! Udaj się teraz tutaj...</span>
 		<span data-en>Excellent! InstaSolution™ will lead you by the hand like a child directly to the cache! Go here now...</span>
 		<img src="app/img/2.jpg">
+		<div class="buttons"><button class="button" onclick="advance()">
+			<span data-pl>Jestem na miejscu!</span>
+			<span data-en>I'm already here!</span>
+		</button></div>
 	</div>
 	<div id="coord2" class="coord-locked">
 		<span data-pl>I grzecznie idziemy dalej tutaj...</span>
 		<span data-en>And we politely go further here...</span>
 		<img src="app/img/3.jpg">
+		<div class="buttons"><button class="button" onclick="advance()">
+			<span data-pl>Jestem na miejscu!</span>
+			<span data-en>I'm already here!</span>
+		</button></div>
 	</div>
 	<div id="coord3" class="coord-locked">
 		<span data-pl>I teraz tutaj, ale nie przechodź jeszcze przez pasy...</span>
 		<span data-en>And now here, but don't cross the crosswalk just yet...</span>
 		<img src="app/img/4.jpg">
+		<div class="buttons"><button class="button" onclick="advance()">
+			<span data-pl>Jestem na miejscu!</span>
+			<span data-en>I'm already here!</span>
+		</button></div>
 	</div>
 	<div id="quiz1">
 		<span data-pl>Zanim przejdziesz przez pasy, prosimy o wypełnienie krótkiej ankiety marketingowej.</span>
@@ -260,16 +298,28 @@
 		<span data-pl>Dziękujemy! Możesz przejść przez pasy...</span>
 		<span data-en>Thank you, you can cross the crosswalk...</span>
 		<img src="app/img/5.jpg">
+		<div class="buttons"><button class="button" onclick="advance()">
+			<span data-pl>Jestem na miejscu!</span>
+			<span data-en>I'm already here!</span>
+		</button></div>
 	</div>
 	<div id="coord5" class="coord-locked">
 		<span data-pl>Teraz tutaj pod górkę...</span>
 		<span data-en>Now up the hill here...</span>
 		<img src="app/img/6.jpg">
+		<div class="buttons"><button class="button" onclick="advance()">
+			<span data-pl>Jestem na miejscu!</span>
+			<span data-en>I'm already here!</span>
+		</button></div>
 	</div>
 	<div id="coord6" class="coord-locked">
 		<span data-pl>Skręć w lewo tutaj i poczekaj chwilę...</span>
 		<span data-en>Turn left here and wait a minute ...</span>
 		<img src="app/img/7.jpg">
+		<div class="buttons"><button class="button" onclick="advance()">
+			<span data-pl>Jestem na miejscu!</span>
+			<span data-en>I'm already here!</span>
+		</button></div>
 	</div>
 	<div id="review1">
 		<span data-pl>Jesteś już bardzo blisko skrytki demonstracyjnej, lecz najpierw prosimy o krótką recenzję naszej aplikacji!</span>
@@ -292,11 +342,19 @@
 		<span data-pl>Dziękujemy za tak pozytywną recenzję! Przejdź teraz tutaj...</span>
 		<span data-en>Thank you for such a positive review! Go here now ...</span>
 		<img src="app/img/8.jpg">
+		<div class="buttons"><button class="button" onclick="advance()">
+			<span data-pl>Jestem na miejscu!</span>
+			<span data-en>I'm already here!</span>
+		</button></div>
 	</div>
 	<div id="coord8" class="coord-locked">
 		<span data-pl>I jeszcze tylko kilka metrów...!</span>
 		<span data-en>And only a few more meters...!</span>
 		<img src="app/img/9.jpg">
+		<div class="buttons"><button class="button" onclick="advance()">
+			<span data-pl>Jestem na miejscu!</span>
+			<span data-en>I'm already here!</span>
+		</button></div>
 	</div>
 	<div id="enter">
 		<span data-pl>Nie zamykaj jeszcze InstaSolution™! Teraz wejdź do biblioteki i poszukaj logo GEOCACHEX® na parapecie po lewej stronie po wejściu!</span>
@@ -307,24 +365,42 @@
 		</button></div>
 	</div>
 	<div id="end">
-		<span data-pl>InstaSolution™ pomaga nie tylko w lokalizowaniu, ale i w otwieraniu skrytek! Zeskanuj specjalny tag za pomocą aplikacji InstaSolution™ na skrytce demonstracyjnej i znajdź kod!</span>
-		<span data-en>InstaSolution™ helps not only to locate, but also to open caches! Scan a special tag on the demo cache with the InstaSolution™ application and find the code!</span>
+		<span data-normal>
+			<span data-pl>InstaSolution™ pomaga nie tylko w lokalizowaniu, ale i w otwieraniu skrytek!<br><br>Zeskanuj specjalny tag za pomocą aplikacji InstaSolution™ na skrytce demonstracyjnej i znajdź kod!</span>
+			<span data-en>InstaSolution™ helps not only to locate, but also to open caches!<br><br>Scan a special tag on the demo cache with the InstaSolution™ application and find the code!</span>
+		</span>
+		<span data-simple>
+			<span data-pl>InstaSolution™ pomaga nie tylko w lokalizowaniu, ale i w otwieraniu skrytek!<br><br>Aplikacja działa w wersji uproszczonej, więc opcja skanowania skrytki nie jest dostępna. InstaSolution™ w zamian pokaże Ci zagadkę do kodu skrytki.</span>
+			<span data-en>InstaSolution™ helps not only to locate, but also to open caches!<br><br>The application works in a simplified mode, so the cache scanning option is not available. InstaSolution™ in return will show you the a puzzle for the cache code.</span>
+			<div class="buttons"><button class="button" onclick="showBackup()">
+				<span data-pl>Okej, jestem gotów!</span>
+				<span data-en>Okay, I'm ready!</span>
+			</button></div>
+		</span>
+
 	</div>
 </div>
 
 <img id="logo" src="app/img/logo.jpg">
 
 </body>
-</html>
 
 <!---->
 <!---->
 <!---->
-<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
-<!--Zagadka jest na prawdę absuralnie prosta i przeglądanie tego kodu kompletnie niszczy Ci jakąkolwiek zabawę/niepodziankę z podejmowania tego kesza. Przeglądając jedynie kod i tak nie otworzysz pojemnika, na prawdę musisz odpalić appke na telefonie.-->
-<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
-<!--The puzzle is really absurdly simple and browsing through this code completely destroys any fun/suprise of finding this cache. You won't even be able open the container just by looking at the code, you really need to run this app on a phone.-->
-<!--⚠️⚠️⚠️⚠️⚠️⚠️-->
+<!---->
+<!---->
+<!--️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️-->
+<!-- Przeglądając jedynie kod źródłowy nie otworzysz pojemnika (na prawdę!) i więcej czasu zmarnujesz na siedzenie przed komputerem, niż zabawe w terenie z tym keszem! Zagadka jest na prawdę absuralnie prosta, zajmuje kilka minut na miejscu i przeglądanie tego kodu kompletnie niszczy Ci jakąkolwiek zabawę/niepodziankę z podejmowania tego kesza. Po co rujnować sobie zabawę, jeśli i tak nic z tego nie masz? -->
+<!--️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️-->
+<!-- By only browsing the source code, you won't open the container (really!) and you will waste more time sitting in front of the computer than having fun in the field with this cache! The puzzle is really absurdly simple, takes a few minutes on the spot and browsing through this code completely destroys any fun/suprise of finding this cache. Why do you want to ruin your own fun, if there's nothing to gain from it? -->
+<!--️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️-->
 <!---->
 <!---->
 <!---->
+<!---->
+<!---->
+
+</html>
+
+

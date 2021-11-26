@@ -1,3 +1,20 @@
+const warningComment = `<!---->
+<!---->
+<!---->
+<!---->
+<!---->
+<!--️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️-->
+<!-- Przeglądając jedynie kod źródłowy nie otworzysz pojemnika (na prawdę!) i więcej czasu zmarnujesz na siedzenie przed komputerem, niż zabawe w terenie z tym keszem! Zagadka jest na prawdę absuralnie prosta, zajmuje kilka minut na miejscu i przeglądanie tego kodu kompletnie niszczy Ci jakąkolwiek zabawę/niepodziankę z podejmowania tego kesza. Po co rujnować sobie zabawę, jeśli i tak nic z tego nie masz? -->
+<!--️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️-->
+<!-- By only browsing the source code, you won't open the container (really!) and you will waste more time sitting in front of the computer than having fun in the field with this cache! The puzzle is really absurdly simple, takes a few minutes on the spot and browsing through this code completely destroys any fun/suprise of finding this cache. Why do you want to ruin your own fun, if there's nothing to gain from it? -->
+<!--️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️️⚠️-->
+<!---->
+<!---->
+<!---->
+<!---->
+<!---->`
+
+
 const arHtml = `<a-scene
     id="car-scene"
     loading-screen="enabled: false"
@@ -25,7 +42,7 @@ const arHtml = `<a-scene
           rotation="0 -15 0"
           gltf-model="#car-model"
       ></a-entity>
-      <a-image src="#car-shadow" rotation="90 0 15" position="0 0 0" scale="1.2 2.5 0"></a-image>
+      <a-image src="#car-shadow" rotation="90 0 15" position="0 0 0.1" scale="1.2 2.5 0"></a-image>
       <a-image src="#car-name" rotation="-90 0 0" position="0 0.041 1.22" height="0.12" width="1.1"></a-image>
       <a-box color="#050505" position="0 0.02 1.2" depth="0.25" height="0.04" width="1.3"></a-box>
 
@@ -35,9 +52,43 @@ const arHtml = `<a-scene
 
 </a-scene>`;
 
+const modelHtml = `<a-scene
+    id="model-scene"
+    loading-screen="enabled: false"
+    shadow="type: pcf"
+    renderer="logarithmicDepthBuffer: true;antialias: true;alpha: true"
+    vr-mode-ui="enabled: false"
+    embedded
+    light="defaultLightsEnabled: false"
+>
+  <a-assets>
+    <img id="car-shadow" src="app/zuk/textures/shadow.png">
+    <img id="car-name" src="app/zuk/textures/name.png">
+    <a-asset-item id="car-model" src="app/zuk/scene.gltf"></a-asset-item>
+  </a-assets>
+  
+  <a-entity light="type: ambient; color: #CCC; intensity: 4"></a-entity>
+  <a-entity light="type: directional; color: #CFC; intensity: 4" position="-1.5 1.0 1.0"></a-entity>
+  <a-entity light="type: directional; color: #FCC; intensity: 4" position="1.5 1.1 -1.0"></a-entity>
+  
+  <a-entity id="model-scene-root">
+        <a-entity
+          position="0 0.25 0"
+          scale="1.5 1.5 1.5"
+          rotation="0 -15 0"
+          gltf-model="#car-model"
+      ></a-entity>
+      <a-image src="#car-shadow" rotation="90 0 15" position="0 0 0.1" scale="1.2 2.5 0"></a-image>
+      <a-image src="#car-name" rotation="-90 0 0" position="0 0.041 1.22" height="0.12" width="1.1"></a-image>
+      <a-box color="#050505" position="0 0.02 1.2" depth="0.25" height="0.04" width="1.3"></a-box>
+  </a-entity>
+  <a-entity id="model-scene-camera" camera rotation="-25 0 0" position="0 1.7 3"></a-entity>
+</a-scene>`;
+
 let arScene;
 
 document.addEventListener('DOMContentLoaded', async () => {
+    appendWarnings();
     if (await didAlreadyGrantPermissions()) {
         onAllPermissionsGranted();
     }
@@ -55,10 +106,33 @@ function hideLoader() {
     setTimeout(() => loader.remove(), 1000);
 }
 
+function appendWarnings() {
+    const links = document.querySelectorAll('link[rel="preload"]')
+    const popups = document.querySelectorAll('#popup-layer > div');
+    const all = [...Array.from(links), ...Array.from(popups)];
+    for(let element of all) {
+        element.insertAdjacentHTML('afterend', warningComment);
+    }
+}
+
 function addArElements() {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = 'app/ar/aframe-ar_3_3_3.min.js';
+    script.onload = () => {
+        const temp = document.createElement('div');
+        temp.innerHTML = arHtml;
+        document.body.appendChild(temp.firstChild);
+    }
+    document.head.appendChild(script);
+}
+
+function addModelElements() {
     const temp = document.createElement('div');
-    temp.innerHTML = arHtml;
-    document.body.appendChild(temp.firstChild);
+    temp.innerHTML = modelHtml;
+    const scene = temp.firstChild;
+    scene.addEventListener('loaded', () => startBackupAnimation());
+    document.body.appendChild(scene);
 }
 
 function onAllPermissionsGranted() {
@@ -66,6 +140,7 @@ function onAllPermissionsGranted() {
     handleGPS();
     handleLoadingAr();
     addArElements();
+    hideModeExclusiveElements(true);
 }
 
 function onArReady() {
@@ -161,7 +236,6 @@ function showPopup(id, onFinish) {
     setTimeout(() => {
         popup.style.transform = null;
         popup.style.opacity = null;
-        activePopup = id;
         onTransitionEnd(popup, () => onFinish());
     }, 100);
 }
@@ -171,6 +245,7 @@ function switchPopup(id, initPopup, onCenter) {
     if (isSwitchingPopup) return;
     isSwitchingPopup = true;
     hideActivePopup(() => {
+        activePopup = id;
         if (initPopup) initPopup();
         if (id) {
             showPopup(id, () => {
@@ -193,7 +268,11 @@ function leaveSingleLanguage(isPolish) {
     }
 }
 
+
+let didSelectLanguage = false;
 async function selectLanguage(isPolish) {
+    if (didSelectLanguage) return;
+    didSelectLanguage = true;
     leaveSingleLanguage(isPolish);
     review = isPolish ? reviewPL : reviewEN;
 
@@ -208,6 +287,8 @@ async function selectLanguage(isPolish) {
 
 function onPermissionFailure() {
     switchPopup('permissions-fail');
+    showAllCoordsLockedButtons();
+    hideModeExclusiveElements(false);
 }
 
 const permissionsSaveName = 'permissions';
@@ -323,7 +404,7 @@ function setCoordsEntryListener(callback, latMin, lonMin, latMax, lonMax) {
 }
 
 function isPlayerInArea(latMin, lonMin, latMax, lonMax) {
-    return true;
+    //return true;
     return latMin < currentLat && latMax > currentLat && lonMin < currentLon && lonMax > currentLon;
 }
 
@@ -338,7 +419,28 @@ function getState() {
     return Number(window.localStorage.getItem('state')) || 0;
 }
 
-const popupsByState = [{ id: 'init', center: () => coordsAdvance(54.507471597227585, 18.54653548533536, 54.507745282621414, 18.547338431105164) }, { id: 'eula' }, { id: 'eula2', init: () => eulaInit(), center: () => eulaHandler() }, { id: 'eula3' }, { id: 'coord1', center: () => coordsAdvance(54.50781932078247, 18.54680613024657, 54.50817186777658, 18.548696039080703) }, { id: 'coord2', center: () => coordsAdvance(54.50779292541855, 18.547939102479628, 54.508159263218396, 18.549059186426508) }, { id: 'coord3', center: () => coordsAdvance(54.5076874280227, 18.54840192535867, 54.508159263218396, 18.549059186426508) }, { id: 'quiz1' }, { id: 'quiz2' }, { id: 'quiz3' }, { id: 'quiz4' }, { id: 'coord4', center: () => coordsAdvance(54.507978493153736, 18.548368990354938, 54.50828514682594, 18.54905681322526) }, { id: 'coord5', center: () => coordsAdvance(54.50793186205135, 18.54727416240388, 54.50843129010726, 18.54809248416851) }, { id: 'coord6', center: () => coordsAdvance(54.508013209285586, 18.547220160798165, 54.50822156986935, 18.547963509297283) }, { id: 'review1' }, { id: 'review2', center: () => onReviewCenter() }, { id: 'coord7', center: () => coordsAdvance(54.507908238052366, 18.54635364953128, 54.50839817351376, 18.547626094486112) }, { id: 'coord8', center: () => coordsAdvance(54.50805526840849, 18.54641484589541, 54.508507288344376, 18.547264374877308) }, { id: 'enter' }, { id: 'end' }];
+const popupsByState = [
+    { id: 'init', init: () => timeLockActiveButton(), center: () => coordsAdvance(54.507471597227585, 18.54653548533536, 54.507745282621414, 18.547338431105164) },
+    { id: 'eula' },
+    { id: 'eula2', init: () => eulaInit(), center: () => eulaHandler() },
+    { id: 'eula3' },
+    { id: 'coord1', init: () => timeLockActiveButton(), center: () => coordsAdvance(54.50781932078247, 18.54680613024657, 54.50817186777658, 18.548696039080703) },
+    { id: 'coord2', init: () => timeLockActiveButton(), center: () => coordsAdvance(54.50779292541855, 18.547939102479628, 54.508159263218396, 18.549059186426508) },
+    { id: 'coord3', init: () => timeLockActiveButton(), center: () => coordsAdvance(54.5076874280227, 18.54840192535867, 54.508159263218396, 18.549059186426508) },
+    { id: 'quiz1' },
+    { id: 'quiz2' },
+    { id: 'quiz3' },
+    { id: 'quiz4' },
+    { id: 'coord4', init: () => timeLockActiveButton(), center: () => coordsAdvance(54.507978493153736, 18.548368990354938, 54.50828514682594, 18.54905681322526) },
+    { id: 'coord5', init: () => timeLockActiveButton(), center: () => coordsAdvance(54.50793186205135, 18.54727416240388, 54.50843129010726, 18.54809248416851) },
+    { id: 'coord6', init: () => timeLockActiveButton(), center: () => coordsAdvance(54.508013209285586, 18.547220160798165, 54.50822156986935, 18.547963509297283) },
+    { id: 'review1' },
+    { id: 'review2', center: () => onReviewCenter() },
+    { id: 'coord7', init: () => timeLockActiveButton(), center: () => coordsAdvance(54.507908238052366, 18.54635364953128, 54.50839817351376, 18.547626094486112) },
+    { id: 'coord8', init: () => timeLockActiveButton(), center: () => coordsAdvance(54.50805526840849, 18.54641484589541, 54.508507288344376, 18.547264374877308) },
+    { id: 'enter' },
+    { id: 'end' }
+];
 
 function advance() {
     saveState(getState() + 1);
@@ -399,6 +501,122 @@ function onReviewChange(input) {
         button.setAttribute('disabled', '');
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////// BACKUP
+
+let modelRoot;
+let modelCamera;
+let firstFrameTime;
+function startBackupAnimation() {
+    modelRoot = document.getElementById('model-scene-root');
+    modelCamera = document.getElementById('model-scene-camera');
+
+    backupAnimationTick(0);
+}
+
+function easing(x) {
+    return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+}
+
+function interpolate(a, b, x) {
+    const dist = b - a;
+    return a + dist * easing(x);
+}
+
+function backupAnimationTick(x) {
+
+    if(!firstFrameTime) {
+        firstFrameTime = x;
+    }
+    const time = x - firstFrameTime;
+    let rotation = (time / 40 + 220) % 360;
+
+    const cameraRotation = { x: -25, y: 0, z: 0 };
+    const cameraPosition = { x: 0, y: 1.7, z: 3 };
+
+    // 60 - 260
+    if (rotation > 60 && rotation < 260) {
+        const backCameraRotation = { x: -20, y: 0, z: 0 };
+        const backCameraPosition = { x: 0, y: 1, z: 1.8 };
+        let fr = 1 - (Math.abs(rotation - 160) / 100);
+        cameraRotation.x = interpolate(cameraRotation.x, backCameraRotation.x, fr);
+        cameraRotation.y = interpolate(cameraRotation.y, backCameraRotation.y, fr);
+        cameraRotation.z = interpolate(cameraRotation.z, backCameraRotation.z, fr);
+        cameraPosition.x = interpolate(cameraPosition.x, backCameraPosition.x, fr);
+        cameraPosition.y = interpolate(cameraPosition.y, backCameraPosition.y, fr);
+        cameraPosition.z = interpolate(cameraPosition.z, backCameraPosition.z, fr);
+    }
+
+    // 280 - 440
+    if (rotation <= 80 || rotation >= 280) {
+        let r = rotation;
+        if(r <= 80) r+= 360;
+        let fr = 1 - (Math.abs(r - 360) / 80);
+        const frontCameraRotation = { x: -35, y: 0, z: 0 };
+        const frontCameraPosition = { x: 0, y: 1.8, z: 2.2 };
+        cameraRotation.x = interpolate(cameraRotation.x, frontCameraRotation.x, fr);
+        cameraRotation.y = interpolate(cameraRotation.y, frontCameraRotation.y, fr);
+        cameraRotation.z = interpolate(cameraRotation.z, frontCameraRotation.z, fr);
+        cameraPosition.x = interpolate(cameraPosition.x, frontCameraPosition.x, fr);
+        cameraPosition.y = interpolate(cameraPosition.y, frontCameraPosition.y, fr);
+        cameraPosition.z = interpolate(cameraPosition.z, frontCameraPosition.z, fr);
+    }
+
+    // Adjust for hori
+    const ratio = Math.min(window.innerWidth / window.innerHeight, 1);
+    const adjust = Math.max(ratio - 0.55, 0) / 0.45;
+
+    cameraPosition.z *= 1 - (0.23 * adjust);
+    cameraPosition.y *= 1 - (0.2 * adjust);
+    cameraRotation.x *= 1 - (0.2 * adjust);
+
+    modelRoot.setAttribute('rotation', { x: 0, y: -rotation, z: 0})
+    modelCamera.setAttribute('rotation', cameraRotation)
+    modelCamera.setAttribute('position', cameraPosition)
+
+    window.requestAnimationFrame((x) => backupAnimationTick(x));
+}
+
+function hideModeExclusiveElements(showNormalMode) {
+    document.querySelector(`[data-${showNormalMode ? 'simple' : 'normal'}]`).remove();
+}
+
+function showBackup() {
+    switchPopup(undefined);
+    addModelElements();
+}
+
+function showAllCoordsLockedButtons() {
+    const buttons = document.querySelectorAll('.coord-locked .buttons');
+    for (let button of buttons) {
+        button.style.display = 'flex';
+    }
+}
+
+function timeLockActiveButton() {
+    const button = document.querySelector(`#${activePopup} button`);
+    const span = document.createElement('span');
+    button.appendChild(span);
+    button.disabled = true;
+    let seconds = 9;
+    updateTimeLockButton(span, seconds);
+    let interval = setInterval(() => {
+        seconds--;
+        updateTimeLockButton(span, seconds);
+
+        if (seconds <= 0) {
+            button.disabled = false;
+            span.remove();
+            clearInterval(interval);
+        }
+    }, 1000);
+}
+
+function updateTimeLockButton(span, seconds) {
+    span.innerHTML = `\xa0(${seconds})`;
+}
+
+
 
 const reviewPL = "Geocachex jest najlepszy!!";
 const reviewEN = "Geocachex is the best!!!!";
