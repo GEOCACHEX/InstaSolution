@@ -300,8 +300,17 @@ function rememberGrantingPermissions() {
     window.localStorage.setItem(permissionsSaveName, 'OK!');
 }
 
+const hasCameraSaveName = 'hasCamera';
+function rememberHavingCamera() {
+    window.localStorage.setItem(hasCameraSaveName, 'OK!');
+}
+
 async function didAlreadyGrantPermissions() {
     return !!window.localStorage.getItem(permissionsSaveName) && (await hasCameraPermission());
+}
+
+async function didAlreadyHaveCamera() {
+    return !!window.localStorage.getItem(hasCameraSaveName);
 }
 
 async function hasCameraPermission() {
@@ -314,9 +323,12 @@ async function hasCameraPermission() {
 }
 
 async function hasCameras() {
+    if (didAlreadyHaveCamera()) return true; // ios 13 workaround
     try {
         const devices = await navigator.mediaDevices.enumerateDevices();
-        return devices.filter(x => x.kind === 'videoinput').length > 0;
+        const result = devices.filter(x => x.kind === 'videoinput').length > 0;
+        if (result) rememberHavingCamera();
+        return result;
     } catch (e) {
         return false;
     }
