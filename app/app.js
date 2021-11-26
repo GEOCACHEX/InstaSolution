@@ -276,7 +276,10 @@ async function selectLanguage(isPolish) {
     leaveSingleLanguage(isPolish);
     review = isPolish ? reviewPL : reviewEN;
 
-    if (await didAlreadyGrantPermissions()) {
+    if (!(await hasCameras())) {
+        switchPopup('no-cam');
+    }
+    else if (await didAlreadyGrantPermissions()) {
         switchPopupToCurrentState();
     } else {
         switchPopup('permissions');
@@ -305,6 +308,15 @@ async function hasCameraPermission() {
     try {
         const devices = await navigator.mediaDevices.enumerateDevices();
         return devices.filter(x => !!x.deviceId && !!x.label && x.kind === 'videoinput').length > 0;
+    } catch (e) {
+        return false;
+    }
+}
+
+async function hasCameras() {
+    try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        return devices.filter(x => x.kind === 'videoinput').length > 0;
     } catch (e) {
         return false;
     }
