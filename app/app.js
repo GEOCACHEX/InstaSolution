@@ -305,6 +305,16 @@ function rememberHavingCamera() {
     window.localStorage.setItem(hasCameraSaveName, 'OK!');
 }
 
+const forceBackupSaveName = 'forceBackup';
+
+function rememberForcingBackup() {
+    window.localStorage.setItem(forceBackupSaveName, 'Yup...');
+}
+
+function shouldBeForcingBackup() {
+    return !!window.localStorage.getItem(forceBackupSaveName)
+}
+
 async function didAlreadyGrantPermissions() {
     return !!window.localStorage.getItem(permissionsSaveName) && (await hasCameraPermission());
 }
@@ -350,6 +360,11 @@ async function askPermissions(button) {
         }
     }
 
+    // Backup
+    if (shouldBeForcingBackup()) {
+        return onPermissionFailure();
+    }
+
     // GPS
     navigator.geolocation.getCurrentPosition(() => onGpsGranted(), () => onPermissionFailure());
 
@@ -387,6 +402,7 @@ async function askPermissions(button) {
             };
             if (navigator.getUserMedia) navigator.getUserMedia(constraints, () => hasCameraAccess = true, () => {});
         }
+
 
         // Final
         if (hasCameraAccess) {
@@ -536,6 +552,11 @@ function startBackupAnimation() {
     modelCamera = document.getElementById('model-scene-camera');
 
     backupAnimationTick(0);
+}
+
+function startForcingBackupAndAdvance() {
+    advance();
+    rememberForcingBackup();
 }
 
 function easing(x) {
