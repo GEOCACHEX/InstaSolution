@@ -19,7 +19,7 @@ const arHtml = `<a-scene
     id="car-scene"
     loading-screen="enabled: false"
     shadow="type: pcf"
-    renderer="logarithmicDepthBuffer: true;antialias: true;alpha: true"
+    renderer="logarithmicDepthBuffer: true;antialias: true;precision: medium"
     vr-mode-ui="enabled: false"
     embedded
     light="defaultLightsEnabled: false"
@@ -56,7 +56,7 @@ const modelHtml = `<a-scene
     id="model-scene"
     loading-screen="enabled: false"
     shadow="type: pcf"
-    renderer="logarithmicDepthBuffer: true;antialias: true;alpha: true"
+    renderer="logarithmicDepthBuffer: true;antialias: true;precision: medium"
     vr-mode-ui="enabled: false"
     embedded
     light="defaultLightsEnabled: false"
