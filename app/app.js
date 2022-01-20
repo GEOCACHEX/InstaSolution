@@ -271,19 +271,30 @@ function leaveSingleLanguage(isPolish) {
 
 let didSelectLanguage = false;
 async function selectLanguage(isPolish) {
+	log(isPolish ? "PL" : "EN");
+	
     if (didSelectLanguage) return;
     didSelectLanguage = true;
     leaveSingleLanguage(isPolish);
     review = isPolish ? reviewPL : reviewEN;
-
-    if (!(await hasCameras())) {
+	
+    if (log("Has no cameras?") && !(await hasCameras())) {
+		console.log("Has no cameras");
         switchPopup('no-cam');
     }
-    else if (await didAlreadyGrantPermissions()) {
+    else if (log("Did already grant permissions?") && await didAlreadyGrantPermissions()) {
+		log("Did grant.");
         switchPopupToCurrentState();
+	
     } else {
+		log("Go to permissions");
         switchPopup('permissions');
     }
+}
+
+function log(text) {
+	console.log(text);
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////// PERMISSIONS
