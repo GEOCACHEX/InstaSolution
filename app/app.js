@@ -199,11 +199,9 @@ function initialHideAllPopups() {
 }
 
 function hidePopupElement(element, onFinish) {
-	log("hidePopupElement");
     onTransitionEnd(element, () => {
         element.style.transition = null;
         if (onFinish) {
-			log("hidePopupElement fired");
 			setTimeout(onFinish);
 		}
     });
@@ -214,11 +212,8 @@ function hidePopupElement(element, onFinish) {
 }
 
 function hideActivePopup(onFinish) {
-	log("hideActivePopup");
     if (activePopup) {
-		log("hideActivePopup has activePopup");
         setTimeout(() => {
-			log("hideActivePopup in timeout");
             const popup = document.getElementById(activePopup);
 			onTransitionEnd(popup, () => hidePopupElement(popup, onFinish));
             popup.style.transform = 'translateX(60px)';
@@ -228,36 +223,38 @@ function hideActivePopup(onFinish) {
 }
 
 function onTransitionEnd(popup, onEnd) {
-	log("onTransitionEnd");
-	console.log(popup);
+	log("onTransitionEnd start");
 	let skipDoubleFire = false;
     const onTransitionEnd = e => {
-		console.log(e);
-        if (e.target === popup && !skipDoubleFire) {
-			skipDoubleFire = true;
-			console.log("============================================= transition OK");
-            popup.removeEventListener('transitionend', onTransitionEnd);
-            onEnd();
-        }
+		if(!skipDoubleFire) {
+			if (e.target === popup) {
+				skipDoubleFire = true;
+				console.log(e);
+				popup.parentElement.removeEventListener('transitionend', onTransitionEnd);
+				onEnd();
+			} else {
+				console.log('Inner')
+			}
+		}
     };
-    popup.addEventListener('transitionend', onTransitionEnd);
+    popup.parentElement.addEventListener('transitionend', onTransitionEnd, true);
 }
 
 function showPopup(id, onFinish) {
     const popup = document.getElementById(id);
-    popup.style.display = null;
     popup.style.transition = null;
+    popup.style.display = null;
 
     setTimeout(() => {
+		onTransitionEnd(popup, () => onFinish());
         popup.style.transform = null;
         popup.style.opacity = null;
-        onTransitionEnd(popup, () => onFinish());
+       
     }, 100);
 }
 
 let isSwitchingPopup = false;
 function switchPopup(id, initPopup, onCenter) {
-	console.log("switchPopup - isAlreadySwitching: " + isSwitchingPopup);
     if (isSwitchingPopup) return;
     isSwitchingPopup = true;
     hideActivePopup(() => {
@@ -287,23 +284,17 @@ function leaveSingleLanguage(isPolish) {
 
 let didSelectLanguage = false;
 async function selectLanguage(isPolish) {
-	log(isPolish ? "PL" : "EN");
-	
     if (didSelectLanguage) return;
     didSelectLanguage = true;
     leaveSingleLanguage(isPolish);
     review = isPolish ? reviewPL : reviewEN;
 	
-    if (log("Has no cameras?") && !(await hasCameras())) {
-		console.log("Has no cameras");
+    if (!(await hasCameras())) {
         switchPopup('no-cam');
     }
-    else if (log("Did already grant permissions?") && await didAlreadyGrantPermissions()) {
-		log("Did grant.");
+    else if (await didAlreadyGrantPermissions()) {
         switchPopupToCurrentState();
-	
     } else {
-		log("Go to permissions");
         switchPopup('permissions');
     }
 }
