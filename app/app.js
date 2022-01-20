@@ -88,6 +88,8 @@ const modelHtml = `<a-scene
 let arScene;
 
 document.addEventListener('DOMContentLoaded', async () => {
+	initPopups();
+	console.log('DOMContentLoaded')
     appendWarnings();
     if (await didAlreadyGrantPermissions()) {
         onAllPermissionsGranted();
@@ -95,7 +97,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 }, true);
 
 window.addEventListener('load', () => {
-    initPopups();
+	console.log('load')
+	initPopups();
     hideLoader();
     setTimeout(() => switchPopup('language-select'), 300);
 });
@@ -224,19 +227,29 @@ function hideActivePopup(onFinish) {
 
 function onTransitionEnd(popup, onEnd) {
 	log("onTransitionEnd start");
-	let skipDoubleFire = false;
+	let didFire = false;
     const onTransitionEnd = e => {
-		if(!skipDoubleFire) {
+		if(!didFire) {
 			if (e.target === popup) {
-				skipDoubleFire = true;
+				didFire = true;
 				console.log(e);
-				popup.parentElement.removeEventListener('transitionend', onTransitionEnd);
+				popup.removeEventListener('transitionend', onTransitionEnd);
 				onEnd();
 			} else {
 				console.log('Inner')
 			}
 		}
     };
+	
+	setTimeout(() => {
+       if(!didFire) {
+		   didFire = true;
+			console.log("Time out transition");
+			popup.removeEventListener('transitionend', onTransitionEnd);
+			onEnd();
+	   }
+    }, 400);
+	
     popup.parentElement.addEventListener('transitionend', onTransitionEnd, true);
 }
 
