@@ -191,16 +191,21 @@ function initPopups() {
 
 function initialHideAllPopups() {
     for (let popup of document.getElementById('popup-layer').children) {
-        hidePopupElement(popup);
+		popup.style.transition = null;
+		popup.style.display = 'none';
+		popup.style.transform = 'translateX(-60px)';
+		popup.style.opacity = '0';
     }
 }
 
 function hidePopupElement(element, onFinish) {
 	log("hidePopupElement");
     onTransitionEnd(element, () => {
-		log("hidePopupElement fired");
         element.style.transition = null;
-        if (onFinish) setTimeout(onFinish);
+        if (onFinish) {
+			log("hidePopupElement fired");
+			setTimeout(onFinish);
+		}
     });
     element.style.transition = 'all 0.1s ease-out';
     element.style.display = 'none';
@@ -211,24 +216,26 @@ function hidePopupElement(element, onFinish) {
 function hideActivePopup(onFinish) {
 	log("hideActivePopup");
     if (activePopup) {
-		log("hideActivePopup before timeout");
+		log("hideActivePopup has activePopup");
         setTimeout(() => {
 			log("hideActivePopup in timeout");
             const popup = document.getElementById(activePopup);
+			onTransitionEnd(popup, () => hidePopupElement(popup, onFinish));
             popup.style.transform = 'translateX(60px)';
             popup.style.opacity = '0';
-
-            onTransitionEnd(popup, () => hidePopupElement(popup, onFinish));
         }, 100);
     } else onFinish();
 }
 
 function onTransitionEnd(popup, onEnd) {
 	log("onTransitionEnd");
+	console.log(popup);
+	let skipDoubleFire = false;
     const onTransitionEnd = e => {
 		console.log(e);
-        if (e.target === popup) {
-			console.log("=============== transition OK");
+        if (e.target === popup && !skipDoubleFire) {
+			skipDoubleFire = true;
+			console.log("============================================= transition OK");
             popup.removeEventListener('transitionend', onTransitionEnd);
             onEnd();
         }
@@ -250,6 +257,7 @@ function showPopup(id, onFinish) {
 
 let isSwitchingPopup = false;
 function switchPopup(id, initPopup, onCenter) {
+	console.log("switchPopup - isAlreadySwitching: " + isSwitchingPopup);
     if (isSwitchingPopup) return;
     isSwitchingPopup = true;
     hideActivePopup(() => {
