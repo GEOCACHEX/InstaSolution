@@ -196,7 +196,9 @@ function initialHideAllPopups() {
 }
 
 function hidePopupElement(element, onFinish) {
+	log("hidePopupElement");
     onTransitionEnd(element, () => {
+		log("hidePopupElement fired");
         element.style.transition = null;
         if (onFinish) setTimeout(onFinish);
     });
@@ -207,8 +209,11 @@ function hidePopupElement(element, onFinish) {
 }
 
 function hideActivePopup(onFinish) {
+	log("hideActivePopup");
     if (activePopup) {
+		log("hideActivePopup before timeout");
         setTimeout(() => {
+			log("hideActivePopup in timeout");
             const popup = document.getElementById(activePopup);
             popup.style.transform = 'translateX(60px)';
             popup.style.opacity = '0';
@@ -219,8 +224,11 @@ function hideActivePopup(onFinish) {
 }
 
 function onTransitionEnd(popup, onEnd) {
+	log("onTransitionEnd");
     const onTransitionEnd = e => {
+		console.log(e);
         if (e.target === popup) {
+			console.log("=============== transition OK");
             popup.removeEventListener('transitionend', onTransitionEnd);
             onEnd();
         }
